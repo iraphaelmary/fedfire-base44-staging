@@ -4,6 +4,9 @@ import History from './pages/History';
 import ControllerGeneral from './pages/ControllerGeneral';
 import Services from './pages/Services';
 import Departments from './pages/Departments';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import Contact from './pages/Contact';
 import __Layout from './Layout.jsx';
 
 
@@ -14,6 +17,9 @@ export const PAGES = {
     "ControllerGeneral": ControllerGeneral,
     "Services": Services,
     "Departments": Departments,
+    "Blog": Blog,
+    "BlogPost": BlogPost,
+    "Contact": Contact,
 }
 
 export const pagesConfig = {

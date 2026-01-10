@@ -1,0 +1,204 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
+import { Calendar, User, Tag, ArrowLeft, Share2, Facebook, Twitter } from 'lucide-react';
+import { format } from 'date-fns';
+import ReactMarkdown from 'react-markdown';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+
+const categoryColors = {
+  news: 'bg-blue-100 text-blue-800',
+  press_release: 'bg-purple-100 text-purple-800',
+  safety_tips: 'bg-green-100 text-green-800',
+  events: 'bg-orange-100 text-orange-800',
+  announcements: 'bg-red-100 text-red-800',
+};
+
+export default function BlogPost() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const postId = urlParams.get('id');
+
+  const { data: post, isLoading } = useQuery({
+    queryKey: ['blog-post', postId],
+    queryFn: async () => {
+      const posts = await base44.entities.BlogPost.filter({ id: postId });
+      return posts[0];
+    },
+    enabled: !!postId,
+  });
+
+  const { data: relatedPosts } = useQuery({
+    queryKey: ['related-posts', post?.category],
+    queryFn: () => base44.entities.BlogPost.filter(
+      { category: post.category, published: true },
+      '-created_date',
+      4
+    ),
+    enabled: !!post?.category,
+    initialData: [],
+  });
+
+  const filteredRelated = relatedPosts.filter(p => p.id !== postId).slice(0, 3);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20">
+        <Skeleton className="h-8 w-32 mb-6" />
+        <Skeleton className="h-12 w-full mb-4" />
+        <Skeleton className="h-6 w-64 mb-8" />
+        <Skeleton className="h-80 w-full rounded-2xl mb-8" />
+        <div className="space-y-4">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+        <h1 className="text-2xl font-bold text-[#1E3A5F] mb-4">Post Not Found</h1>
+        <p className="text-gray-600 mb-6">The article you're looking for doesn't exist or has been removed.</p>
+        <Link
+          to={createPageUrl('Blog')}
+          className="inline-flex items-center gap-2 text-[#C41E3A] font-semibold"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          Back to Blog
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {/* Hero Section */}
+      <section className="relative h-[50vh] min-h-[400px] flex items-end">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('${post.featured_image || 'https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070'}')`
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A5F] via-[#1E3A5F]/50 to-transparent" />
+        </div>
+        <div className="relative max-w-4xl mx-auto px-4 pb-12 w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Link
+              to={createPageUrl('Blog')}
+              className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Blog
+            </Link>
+            <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize mb-4 ${categoryColors[post.category] || 'bg-gray-100 text-gray-800'}`}>
+              {post.category?.replace('_', ' ')}
+            </span>
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">{post.title}</h1>
+            <div className="flex flex-wrap items-center gap-4 text-white/80">
+              <span className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                {format(new Date(post.created_date), 'MMMM d, yyyy')}
+              </span>
+              {post.author && (
+                <span className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  {post.author}
+                </span>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Content */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="prose prose-lg max-w-none prose-headings:text-[#1E3A5F] prose-a:text-[#C41E3A]"
+          >
+            <ReactMarkdown>{post.content}</ReactMarkdown>
+          </motion.div>
+
+          {/* Share Section */}
+          <div className="mt-12 pt-8 border-t">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="font-semibold text-[#1E3A5F]">Share this article:</span>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, '_blank')}
+                  >
+                    <Facebook className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => window.open(`https://twitter.com/intent/tweet?url=${window.location.href}&text=${post.title}`, '_blank')}
+                  >
+                    <Twitter className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <Link
+                to={createPageUrl('Blog')}
+                className="inline-flex items-center gap-2 text-[#C41E3A] font-semibold hover:gap-4 transition-all"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to all articles
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Posts */}
+      {filteredRelated.length > 0 && (
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4">
+            <h2 className="text-2xl font-bold text-[#1E3A5F] mb-8">Related Articles</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {filteredRelated.map((relPost) => (
+                <Link
+                  key={relPost.id}
+                  to={createPageUrl(`BlogPost?id=${relPost.id}`)}
+                  className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all"
+                >
+                  <div className="h-40 overflow-hidden">
+                    <img
+                      src={relPost.featured_image || 'https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070'}
+                      alt={relPost.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-bold text-[#1E3A5F] group-hover:text-[#C41E3A] transition-colors line-clamp-2">
+                      {relPost.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-2">
+                      {format(new Date(relPost.created_date), 'MMM d, yyyy')}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}
