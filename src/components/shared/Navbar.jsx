@@ -9,6 +9,7 @@ const navLinks = [
   { name: 'About Us', page: 'About', subLinks: [
     { name: 'Our History', page: 'History' },
     { name: 'Controller General', page: 'ControllerGeneral' },
+    { name: 'Leadership', page: 'Leadership' },
   ]},
   { name: 'Services', page: 'Services' },
   { name: 'Departments', page: 'Departments' },

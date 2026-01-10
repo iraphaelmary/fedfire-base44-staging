@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import HeroSection from '@/components/home/HeroSection';
 import ServicesPreview from '@/components/home/ServicesPreview';
 import AboutPreview from '@/components/home/AboutPreview';
+import ControllerGeneralPreview from '@/components/home/ControllerGeneralPreview';
 import NewsSection from '@/components/home/NewsSection';
 import SafetyTips from '@/components/home/SafetyTips';
 
@@ -19,6 +20,7 @@ export default function Home() {
       <HeroSection />
       <ServicesPreview />
       <AboutPreview />
+      <ControllerGeneralPreview />
       <NewsSection posts={posts} />
       <SafetyTips />
     </div>

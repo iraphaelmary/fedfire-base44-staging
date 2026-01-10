@@ -7,6 +7,7 @@ import Departments from './pages/Departments';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Contact from './pages/Contact';
+import Leadership from './pages/Leadership';
 import __Layout from './Layout.jsx';
 
 
@@ -20,6 +21,7 @@ export const PAGES = {
     "Blog": Blog,
     "BlogPost": BlogPost,
     "Contact": Contact,
+    "Leadership": Leadership,
 }
 
 export const pagesConfig = {
