@@ -51,13 +51,13 @@ export default function ServicesPreview() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-12 md:mb-16"
         >
-          <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">What We Do</span>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#1E3A5F] mt-3 mb-4">
+          <span className="text-[#C41E3A] font-semibold text-xs md:text-sm uppercase tracking-wider">What We Do</span>
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-[#1E3A5F] mt-3 mb-4">
             Our Services
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          <p className="text-gray-600 max-w-2xl mx-auto text-base md:text-lg">
             The Federal Fire Service provides comprehensive fire protection services 
             to safeguard lives and property across Nigeria.
           </p>

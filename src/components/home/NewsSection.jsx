@@ -14,30 +14,30 @@ export default function NewsSection({ posts }) {
   const otherPosts = posts.slice(1, 4);
 
   return (
-    <section className="py-24 bg-gray-50">
+    <section className="py-16 md:py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12"
+          className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12"
         >
           <div>
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Latest Updates</span>
-            <h2 className="text-3xl md:text-5xl font-bold text-[#1E3A5F] mt-3">
+            <span className="text-[#C41E3A] font-semibold text-xs md:text-sm uppercase tracking-wider">Latest Updates</span>
+            <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-[#1E3A5F] mt-3">
               News & Announcements
             </h2>
           </div>
           <Link
             to={createPageUrl('Blog')}
-            className="mt-4 md:mt-0 inline-flex items-center gap-2 text-[#C41E3A] font-semibold hover:gap-4 transition-all"
+            className="mt-3 md:mt-0 inline-flex items-center gap-2 text-[#C41E3A] font-semibold text-sm md:text-base hover:gap-4 transition-all"
           >
             View All News
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
           </Link>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
           {/* Featured Post */}
           {featuredPost && (
             <motion.div
@@ -47,33 +47,33 @@ export default function NewsSection({ posts }) {
               className="group"
             >
               <Link to={createPageUrl(`BlogPost?id=${featuredPost.id}`)}>
-                <div className="relative h-80 rounded-2xl overflow-hidden mb-6">
+                <div className="relative h-56 md:h-80 rounded-xl md:rounded-2xl overflow-hidden mb-4 md:mb-6">
                   <img
                     src={featuredPost.featured_image || 'https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070'}
                     alt={featuredPost.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <span className="absolute top-4 left-4 bg-[#C41E3A] text-white px-3 py-1 rounded-full text-sm font-medium capitalize">
+                  <span className="absolute top-3 left-3 md:top-4 md:left-4 bg-[#C41E3A] text-white px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-medium capitalize">
                     {featuredPost.category?.replace('_', ' ')}
                   </span>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm text-gray-500 mb-2 md:mb-3">
                   <span className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
+                    <Calendar className="w-3 h-3 md:w-4 md:h-4" />
                     {format(new Date(featuredPost.created_date), 'MMM d, yyyy')}
                   </span>
                   {featuredPost.author && (
                     <span className="flex items-center gap-1">
-                      <User className="w-4 h-4" />
+                      <User className="w-3 h-3 md:w-4 md:h-4" />
                       {featuredPost.author}
                     </span>
                   )}
                 </div>
-                <h3 className="text-2xl font-bold text-[#1E3A5F] group-hover:text-[#C41E3A] transition-colors mb-3">
+                <h3 className="text-lg md:text-2xl font-bold text-[#1E3A5F] group-hover:text-[#C41E3A] transition-colors mb-2 md:mb-3">
                   {featuredPost.title}
                 </h3>
-                <p className="text-gray-600 line-clamp-2">{featuredPost.excerpt}</p>
+                <p className="text-sm md:text-base text-gray-600 line-clamp-2">{featuredPost.excerpt}</p>
               </Link>
             </motion.div>
           )}
