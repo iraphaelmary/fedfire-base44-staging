@@ -237,6 +237,36 @@ export const validateContactForm = (formData) => {
   };
 };
 
+/**
+ * Validate category form
+ */
+export const validateCategoryForm = (formData) => {
+  const errors = {};
+  
+  if (!formData.name || !isValidLength(formData.name, 2, 100)) {
+    errors.name = 'Name must be between 2 and 100 characters';
+  }
+  if (hasScriptInjection(formData.name)) {
+    errors.name = 'Invalid characters in name';
+  }
+  
+  if (formData.slug && hasScriptInjection(formData.slug)) {
+    errors.slug = 'Invalid characters in slug';
+  }
+  
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+};
+
+/**
+ * Check if user is admin (A01: Broken Access Control)
+ */
+export const isAdmin = (user) => {
+  return user && user.role === 'admin';
+};
+
 // ==================== SESSION SECURITY ====================
 
 /**

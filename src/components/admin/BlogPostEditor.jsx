@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { X } from 'lucide-react';
+import { X, Shield } from 'lucide-react';
+import { sanitizeInput, SECURITY_CONFIG } from '@/components/utils/security';
 
 const modules = {
   toolbar: [
@@ -25,25 +28,41 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
     slug: '',
     excerpt: '',
     content: '',
-    category: 'news',
+    category: '',
     featured_image: '',
     is_featured: false,
     author: '',
     published: true,
   });
 
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => base44.entities.Category.list(),
+  });
+
   useEffect(() => {
     if (post) {
       setFormData(post);
+    } else if (categories.length > 0 && !formData.category) {
+      setFormData(prev => ({ ...prev, category: categories[0].slug }));
     }
-  }, [post]);
+  }, [post, categories]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataToSave = { ...formData };
+    
+    // Security: Sanitize inputs
+    const dataToSave = {
+      ...formData,
+      title: sanitizeInput(formData.title),
+      excerpt: sanitizeInput(formData.excerpt),
+      author: sanitizeInput(formData.author),
+    };
+    
     if (!dataToSave.slug) {
-      dataToSave.slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      dataToSave.slug = dataToSave.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
+    
     onSave(dataToSave);
   };
 
@@ -51,9 +70,15 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl w-full max-w-4xl my-8">
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-2xl font-bold text-[#1E3A5F]">
-            {post ? 'Edit Blog Post' : 'Create New Blog Post'}
-          </h2>
+          <div>
+            <h2 className="text-2xl font-bold text-[#1E3A5F]">
+              {post ? 'Edit Blog Post' : 'Create New Blog Post'}
+            </h2>
+            <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+              <Shield className="w-4 h-4 text-green-600" />
+              <span>Input sanitization enabled</span>
+            </div>
+          </div>
           <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
             <X className="w-6 h-6" />
           </button>
@@ -69,6 +94,7 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 placeholder="Blog post title"
+                maxLength={200}
               />
             </div>
 
@@ -116,14 +142,12 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
                 onValueChange={(value) => setFormData({ ...formData, category: value })}
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="news">News</SelectItem>
-                  <SelectItem value="press_release">Press Release</SelectItem>
-                  <SelectItem value="safety_tips">Safety Tips</SelectItem>
-                  <SelectItem value="events">Events</SelectItem>
-                  <SelectItem value="announcements">Announcements</SelectItem>
+                  {categories.map(cat => (
+                    <SelectItem key={cat.id} value={cat.slug}>{cat.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

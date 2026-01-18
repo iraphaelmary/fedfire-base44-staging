@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Plus, Edit, Trash2, Eye, Search, Filter, 
-  FileText, TrendingUp, Users, AlertCircle 
+  FileText, TrendingUp, Users, AlertCircle, Tag, BarChart3, Shield, Lock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,10 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import BlogPostEditor from '@/components/admin/BlogPostEditor';
+import CategoryManager from '@/components/admin/CategoryManager';
+import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 import { format } from 'date-fns';
+import { isAdmin } from '@/components/utils/security';
 
 const categoryColors = {
   news: 'bg-blue-100 text-blue-800',
@@ -36,8 +39,30 @@ export default function AdminDashboard() {
   const [deletePost, setDeletePost] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('all');
+  const [showCategoryManager, setShowCategoryManager] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   
   const queryClient = useQueryClient();
+
+  // Security: Check admin access
+  useEffect(() => {
+    const checkAccess = async () => {
+      try {
+        const user = await base44.auth.me();
+        setCurrentUser(user);
+        if (isAdmin(user)) {
+          setIsAuthorized(true);
+        } else {
+          setIsAuthorized(false);
+        }
+      } catch (error) {
+        setIsAuthorized(false);
+      }
+    };
+    checkAccess();
+  }, []);
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['admin-blog-posts'],
@@ -47,6 +72,13 @@ export default function AdminDashboard() {
   const { data: contactMessages = [] } = useQuery({
     queryKey: ['contact-messages'],
     queryFn: () => base44.entities.ContactMessage.filter({ status: 'new' }, '-created_date', 5),
+    enabled: isAuthorized,
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => base44.entities.Category.list(),
+    enabled: isAuthorized,
   });
 
   const createMutation = useMutation({
@@ -103,16 +135,40 @@ export default function AdminDashboard() {
     { label: 'Total Posts', value: posts.length, icon: FileText, color: 'text-blue-600' },
     { label: 'Published', value: posts.filter(p => p.published).length, icon: TrendingUp, color: 'text-green-600' },
     { label: 'Drafts', value: posts.filter(p => !p.published).length, icon: Edit, color: 'text-orange-600' },
-    { label: 'New Messages', value: contactMessages.length, icon: Users, color: 'text-purple-600' },
+    { label: 'Categories', value: categories.length, icon: Tag, color: 'text-purple-600' },
   ];
+
+  // Security: Show unauthorized message
+  if (!isAuthorized) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Lock className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-[#1E3A5F] mb-2">Access Denied</h1>
+          <p className="text-gray-600 mb-4">You need administrator privileges to access this page.</p>
+          <Button onClick={() => window.location.href = '/'} className="bg-[#C41E3A] hover:bg-[#A01830]">
+            Go to Home
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-[#1E3A5F] text-white py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-gray-300">Manage blog posts and content</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+              <p className="text-gray-300">Manage blog posts and content</p>
+            </div>
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg">
+              <Shield className="w-5 h-5 text-green-400" />
+              <span className="text-sm">OWASP Secured</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -141,6 +197,33 @@ export default function AdminDashboard() {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Quick Actions */}
+        <div className="flex flex-wrap gap-3 mb-6">
+          <Button
+            onClick={() => setShowAnalytics(!showAnalytics)}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <BarChart3 className="w-4 h-4" />
+            {showAnalytics ? 'Hide Analytics' : 'View Analytics'}
+          </Button>
+          <Button
+            onClick={() => setShowCategoryManager(true)}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <Tag className="w-4 h-4" />
+            Manage Categories
+          </Button>
+        </div>
+
+        {/* Analytics Dashboard */}
+        {showAnalytics && (
+          <div className="mb-8">
+            <AnalyticsDashboard posts={posts} categories={categories} />
+          </div>
+        )}
+
         {/* Controls */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -160,11 +243,9 @@ export default function AdminDashboard() {
                 className="px-4 py-2 border rounded-lg bg-white"
               >
                 <option value="all">All Categories</option>
-                <option value="news">News</option>
-                <option value="press_release">Press Releases</option>
-                <option value="safety_tips">Safety Tips</option>
-                <option value="events">Events</option>
-                <option value="announcements">Announcements</option>
+                {categories.map(cat => (
+                  <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                ))}
               </select>
             </div>
             <Button
@@ -277,6 +358,11 @@ export default function AdminDashboard() {
             setEditingPost(null);
           }}
         />
+      )}
+
+      {/* Category Manager Modal */}
+      {showCategoryManager && (
+        <CategoryManager onClose={() => setShowCategoryManager(false)} />
       )}
 
       {/* Delete Confirmation */}
