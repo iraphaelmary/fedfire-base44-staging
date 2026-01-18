@@ -15,6 +15,7 @@ const navLinks = [
   { name: 'Departments', page: 'Departments' },
   { name: 'News & Blog', page: 'Blog' },
   { name: 'Contact', page: 'Contact' },
+  { name: 'Admin', page: 'AdminDashboard' },
 ];
 
 export default function Navbar() {
