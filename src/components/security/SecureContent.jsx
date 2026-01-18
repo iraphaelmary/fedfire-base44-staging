@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { sanitizeHTMLContent } from '@/utils/security';
+import { sanitizeHTMLContent } from '@/components/utils/security';
 
 /**
  * SecureContent Component
