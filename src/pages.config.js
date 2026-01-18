@@ -1,27 +1,27 @@
-import Home from './pages/Home';
 import About from './pages/About';
-import History from './pages/History';
-import ControllerGeneral from './pages/ControllerGeneral';
-import Services from './pages/Services';
-import Departments from './pages/Departments';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Contact from './pages/Contact';
+import ControllerGeneral from './pages/ControllerGeneral';
+import Departments from './pages/Departments';
+import History from './pages/History';
+import Home from './pages/Home';
 import Leadership from './pages/Leadership';
+import Services from './pages/Services';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
     "About": About,
-    "History": History,
-    "ControllerGeneral": ControllerGeneral,
-    "Services": Services,
-    "Departments": Departments,
     "Blog": Blog,
     "BlogPost": BlogPost,
     "Contact": Contact,
+    "ControllerGeneral": ControllerGeneral,
+    "Departments": Departments,
+    "History": History,
+    "Home": Home,
     "Leadership": Leadership,
+    "Services": Services,
 }
 
 export const pagesConfig = {

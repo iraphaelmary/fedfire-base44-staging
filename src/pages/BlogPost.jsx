@@ -6,9 +6,9 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Calendar, User, Tag, ArrowLeft, Share2, Facebook, Twitter } from 'lucide-react';
 import { format } from 'date-fns';
-import ReactMarkdown from 'react-markdown';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import SecureContent from '@/components/security/SecureContent';
 
 const categoryColors = {
   news: 'bg-blue-100 text-blue-800',
@@ -127,9 +127,12 @@ export default function BlogPost() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="prose prose-lg max-w-none prose-headings:text-[#1E3A5F] prose-a:text-[#C41E3A]"
           >
-            <ReactMarkdown>{post.content}</ReactMarkdown>
+            <SecureContent 
+              content={post.content} 
+              type="markdown"
+              className="prose prose-lg max-w-none prose-headings:text-[#1E3A5F] prose-a:text-[#C41E3A]"
+            />
           </motion.div>
 
           {/* Share Section */}
