@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Plus, Edit, Trash2, Eye, Search, Filter, 
-  FileText, TrendingUp, Users, AlertCircle, Tag, BarChart3, Shield, Lock
+  FileText, TrendingUp, Users, AlertCircle, Tag, BarChart3, Shield, Lock, Share2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,8 @@ import CategoryManager from '@/components/admin/CategoryManager';
 import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
 import { format } from 'date-fns';
 import { isAdmin } from '@/components/utils/security';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 const categoryColors = {
   news: 'bg-blue-100 text-blue-800',
@@ -215,6 +217,15 @@ export default function AdminDashboard() {
             <Tag className="w-4 h-4" />
             Manage Categories
           </Button>
+          <Link to={createPageUrl('APIExport')}>
+            <Button
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Share2 className="w-4 h-4" />
+              Share API & Export
+            </Button>
+          </Link>
         </div>
 
         {/* Analytics Dashboard */}

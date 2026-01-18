@@ -9,6 +9,8 @@ import History from './pages/History';
 import Home from './pages/Home';
 import Leadership from './pages/Leadership';
 import Services from './pages/Services';
+import APIExport from './pages/APIExport';
+import APIPosts from './pages/APIPosts';
 import __Layout from './Layout.jsx';
 
 
@@ -24,6 +26,8 @@ export const PAGES = {
     "Home": Home,
     "Leadership": Leadership,
     "Services": Services,
+    "APIExport": APIExport,
+    "APIPosts": APIPosts,
 }
 
 export const pagesConfig = {

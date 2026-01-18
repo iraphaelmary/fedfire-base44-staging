@@ -4,11 +4,13 @@ import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Calendar, User, Tag, ArrowLeft, Share2, Facebook, Twitter } from 'lucide-react';
+import { Calendar, User, Tag, ArrowLeft, Share2, Facebook, Twitter, Linkedin, MessageCircle, Link as LinkIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import SecureContent from '@/components/security/SecureContent';
+import { formatPostForAPI } from '@/components/utils/shareAPI';
+import { toast } from 'sonner';
 
 const categoryColors = {
   news: 'bg-blue-100 text-blue-800',
@@ -43,6 +45,18 @@ export default function BlogPost() {
   });
 
   const filteredRelated = relatedPosts.filter(p => p.id !== postId).slice(0, 3);
+
+  const handleCopyLink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    toast.success('Link copied to clipboard!');
+  };
+
+  const handleShareAPI = () => {
+    const apiData = formatPostForAPI(post);
+    navigator.clipboard.writeText(JSON.stringify(apiData, null, 2));
+    toast.success('API data copied to clipboard!');
+  };
 
   if (isLoading) {
     return (
@@ -137,26 +151,73 @@ export default function BlogPost() {
 
           {/* Share Section */}
           <div className="mt-12 pt-8 border-t">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+              <div className="flex flex-wrap items-center gap-3">
                 <span className="font-semibold text-[#1E3A5F]">Share this article:</span>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`, '_blank')}
+                    onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank')}
+                    title="Share on Facebook"
                   >
                     <Facebook className="w-4 h-4" />
                   </Button>
                   <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => window.open(`https://twitter.com/intent/tweet?url=${window.location.href}&text=${post.title}`, '_blank')}
+                    onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title)}`, '_blank')}
+                    title="Share on Twitter"
                   >
                     <Twitter className="w-4 h-4" />
                   </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank')}
+                    title="Share on LinkedIn"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => window.open(`https://wa.me/?text=${encodeURIComponent(post.title + ' ' + window.location.href)}`, '_blank')}
+                    title="Share on WhatsApp"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleCopyLink}
+                    title="Copy link"
+                  >
+                    <LinkIcon className="w-4 h-4" />
+                  </Button>
                 </div>
               </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-gray-700 mb-1">API Access</p>
+                  <p className="text-xs text-gray-500">Copy structured data for third-party integrations</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleShareAPI}
+                  className="flex items-center gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Copy API Data
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-6 text-center">
               <Link
                 to={createPageUrl('Blog')}
                 className="inline-flex items-center gap-2 text-[#C41E3A] font-semibold hover:gap-4 transition-all"
