@@ -28,5 +28,15 @@ dist-ssr
 *.sw?
 
 .env
+<<<<<<< HEAD
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+=======
+
+# Convex
+convex/_generated/
+convex-local-backend
+convex-backend.zip
+convex_local_backend.sqlite3
+convex_local_storage/
+>>>>>>> 8f5a485e1aa504ebc660f82c5c8b8624b7403707

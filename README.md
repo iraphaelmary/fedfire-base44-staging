@@ -1,39 +1,60 @@
-**Welcome to your Base44 project** 
+# FedFire
 
-**About**
+FedFire is a modern web application built with **React**, **Vite**, and **Convex**. It features a modern aesthetic and is designed for high performance and a seamless local development experience.
 
-View and Edit  your app on [Base44.com](http://Base44.com) 
+## 🚀 fast start
 
-This project contains everything you need to run your app locally.
+This project uses a custom automation script to set up your local backend and frontend in one command.
 
-**Edit the code in your local development environment**
+1.  **Install dependencies**
+    ```bash
+    yarn install
+    # or
+    npm install
+    ```
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+2.  **Start development server**
+    ```bash
+    yarn dev
+    # or
+    npm run dev
+    ```
 
-**Prerequisites:** 
+    **What this command does:**
+    *   ⬇️  Downloads the Convex local backend binary (if needed).
+    *   🧹 Cleans previous local configuration (`.env.local`, `convex.json`).
+    *   🔥 Starts the local Convex backend process.
+    *   ✨ connects the Convex CLI and launches the Vite frontend server.
 
-1. Clone the repository using the project's Git URL 
-2. Navigate to the project directory
-3. Install dependencies: `npm install`
-4. Create an `.env.local` file and set the right environment variables
+    No manual Docker or cloud configuration is required!
 
-```
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=your_backend_url
+## 🛠 Tech Stack
 
-e.g.
-VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
-VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
-```
+*   **Frontend**: React (Vite)
+*   **Backend**: [Convex](https://convex.dev/) (Local Backend)
+*   **Styling**: TailwindCSS, Framer Motion
+*   **Language**: TypeScript / JavaScript
+*   **Design System**: Modern UI (clean, minimal, dark mode capable)
 
-Run the app: `npm run dev`
+## 📂 Project Structure
 
-**Publish your changes**
+*   **/convex**: Backend schema and functions (API).
+    *   `schema.ts`: Database schema definitions (BlogPosts, Users, etc.).
+    *   `*.ts`: Query and mutation functions.
+*   **/src**: Frontend application code.
+    *   `/components`: Reusable UI components.
+    *   `/pages`: Application routes.
+    *   `App.jsx`: Main application entry point.
+*   **/scripts**: DevOps automation scripts.
+    *   `dev.js`: The magic script that powers `yarn dev`.
 
-Open [Base44.com](http://Base44.com) and click on Publish.
+## ✨ Key Features
 
-**Docs & Support**
+*   **Fully Local Development**: The backend runs entirely on your machine for zero-latency development.
+*   **Modern UI**: A premium, highly polished interface with responsive design.
+*   **Real-time Data**: Powered by Convex's reactive backend.
 
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
+## 📝 Notes
 
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+*   The project is configured to run specifically with a local Convex instance effectively mimicking a full stack environment without external dependencies.
+*   Configuration limits for the local backend (like the admin key) are handled automatically by `scripts/dev.js`.
