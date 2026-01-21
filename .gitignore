@@ -28,3 +28,10 @@ dist-ssr
 *.sw?
 
 .env
+
+# Convex
+convex/_generated/
+convex-local-backend
+convex-backend.zip
+convex_local_backend.sqlite3
+convex_local_storage/
