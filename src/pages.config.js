@@ -11,20 +11,24 @@ import Leadership from './pages/Leadership';
 import Services from './pages/Services';
 import APIExport from './pages/APIExport';
 import APIPosts from './pages/APIPosts';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "About": About,
-    "AdminDashboard": AdminDashboard,
+    "admin": AdminDashboard,
     "Blog": Blog,
     "BlogPost": BlogPost,
     "Contact": Contact,
     "ControllerGeneral": ControllerGeneral,
     "Departments": Departments,
+    "forgot-password": ForgotPassword,
     "History": History,
     "Home": Home,
     "Leadership": Leadership,
+    "reset-password": ResetPassword,
     "Services": Services,
     "APIExport": APIExport,
     "APIPosts": APIPosts,

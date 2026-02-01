@@ -26,7 +26,7 @@ export const isValidPhone = (phone) => {
  */
 export const sanitizeInput = (input) => {
   if (typeof input !== 'string') return '';
-  
+
   return input
     .trim()
     .replace(/[<>]/g, '') // Remove < and > to prevent HTML injection
@@ -61,7 +61,7 @@ export const hasSQLInjection = (input) => {
     /(union|join|from|where|having)/gi,
     /[;'"\\]/g
   ];
-  
+
   return sqlPatterns.some(pattern => pattern.test(input));
 };
 
@@ -77,7 +77,7 @@ export const hasScriptInjection = (input) => {
     /<object/gi,
     /<embed/gi
   ];
-  
+
   return scriptPatterns.some(pattern => pattern.test(input));
 };
 
@@ -92,10 +92,10 @@ const rateLimitStore = new Map();
 export const checkRateLimit = (identifier, maxAttempts = 3, windowMs = 60000) => {
   const now = Date.now();
   const key = `rate_limit_${identifier}`;
-  
+
   const attempts = rateLimitStore.get(key) || [];
   const recentAttempts = attempts.filter(timestamp => now - timestamp < windowMs);
-  
+
   if (recentAttempts.length >= maxAttempts) {
     const oldestAttempt = Math.min(...recentAttempts);
     const waitTime = Math.ceil((windowMs - (now - oldestAttempt)) / 1000);
@@ -105,10 +105,10 @@ export const checkRateLimit = (identifier, maxAttempts = 3, windowMs = 60000) =>
       message: `Too many attempts. Please wait ${waitTime} seconds.`
     };
   }
-  
+
   recentAttempts.push(now);
   rateLimitStore.set(key, recentAttempts);
-  
+
   return { allowed: true };
 };
 
@@ -137,7 +137,7 @@ export const isHoneypotEmpty = (value) => {
  */
 export const sanitizeHTMLContent = (html) => {
   if (typeof html !== 'string') return '';
-  
+
   // Remove dangerous tags and attributes
   return html
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
@@ -168,12 +168,12 @@ export const isValidURL = (url) => {
  */
 export const isInternalURL = (url) => {
   if (!url) return true;
-  
+
   // Check if URL is relative
   if (url.startsWith('/') && !url.startsWith('//')) {
     return true;
   }
-  
+
   // Check if URL is same origin
   try {
     const urlObj = new URL(url, window.location.origin);
@@ -190,7 +190,7 @@ export const isInternalURL = (url) => {
  */
 export const validateContactForm = (formData) => {
   const errors = {};
-  
+
   // Name validation
   if (!formData.name || !isValidLength(formData.name, 2, 100)) {
     errors.name = 'Name must be between 2 and 100 characters';
@@ -198,17 +198,17 @@ export const validateContactForm = (formData) => {
   if (hasScriptInjection(formData.name)) {
     errors.name = 'Invalid characters in name';
   }
-  
+
   // Email validation
   if (!formData.email || !isValidEmail(formData.email)) {
     errors.email = 'Please enter a valid email address';
   }
-  
+
   // Phone validation (optional)
   if (formData.phone && !isValidPhone(formData.phone)) {
     errors.phone = 'Please enter a valid phone number';
   }
-  
+
   // Subject validation
   if (!formData.subject || !isValidLength(formData.subject, 3, 200)) {
     errors.subject = 'Subject must be between 3 and 200 characters';
@@ -216,7 +216,7 @@ export const validateContactForm = (formData) => {
   if (hasScriptInjection(formData.subject)) {
     errors.subject = 'Invalid characters in subject';
   }
-  
+
   // Message validation
   if (!formData.message || !isValidLength(formData.message, 10, 5000)) {
     errors.message = 'Message must be between 10 and 5000 characters';
@@ -224,13 +224,13 @@ export const validateContactForm = (formData) => {
   if (hasScriptInjection(formData.message)) {
     errors.message = 'Invalid characters in message';
   }
-  
+
   // Check for SQL injection attempts
   const fieldsToCheck = [formData.name, formData.subject, formData.message];
   if (fieldsToCheck.some(field => hasSQLInjection(field))) {
     errors._security = 'Invalid input detected';
   }
-  
+
   return {
     isValid: Object.keys(errors).length === 0,
     errors
@@ -242,18 +242,18 @@ export const validateContactForm = (formData) => {
  */
 export const validateCategoryForm = (formData) => {
   const errors = {};
-  
+
   if (!formData.name || !isValidLength(formData.name, 2, 100)) {
     errors.name = 'Name must be between 2 and 100 characters';
   }
   if (hasScriptInjection(formData.name)) {
     errors.name = 'Invalid characters in name';
   }
-  
+
   if (formData.slug && hasScriptInjection(formData.slug)) {
     errors.slug = 'Invalid characters in slug';
   }
-  
+
   return {
     isValid: Object.keys(errors).length === 0,
     errors
@@ -264,7 +264,14 @@ export const validateCategoryForm = (formData) => {
  * Check if user is admin (A01: Broken Access Control)
  */
 export const isAdmin = (user) => {
-  return user && user.role === 'admin';
+  return user && (user.role === 'admin' || user.role === 'super_admin');
+};
+
+/**
+ * Checks if user is super admin
+ */
+export const isSuperAdmin = (user) => {
+  return user && user.role === 'super_admin';
 };
 
 // ==================== SESSION SECURITY ====================
@@ -292,7 +299,7 @@ export const validateSecurityToken = (token, storedToken) => {
  */
 export const sanitizeFormData = (data) => {
   const sanitized = {};
-  
+
   for (const [key, value] of Object.entries(data)) {
     if (typeof value === 'string') {
       sanitized[key] = sanitizeInput(value);
@@ -300,7 +307,7 @@ export const sanitizeFormData = (data) => {
       sanitized[key] = value;
     }
   }
-  
+
   return sanitized;
 };
 
@@ -310,19 +317,19 @@ export const SECURITY_CONFIG = {
   // Rate limiting
   MAX_FORM_SUBMISSIONS: 3,
   RATE_LIMIT_WINDOW_MS: 60000, // 1 minute
-  
+
   // Input lengths
   MAX_NAME_LENGTH: 100,
   MAX_EMAIL_LENGTH: 254,
   MAX_PHONE_LENGTH: 20,
   MAX_SUBJECT_LENGTH: 200,
   MAX_MESSAGE_LENGTH: 5000,
-  
+
   // Minimum lengths
   MIN_NAME_LENGTH: 2,
   MIN_SUBJECT_LENGTH: 3,
   MIN_MESSAGE_LENGTH: 10,
-  
+
   // Session
   SESSION_TIMEOUT_MS: 3600000, // 1 hour
 };

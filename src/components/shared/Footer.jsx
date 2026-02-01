@@ -1,17 +1,7 @@
-// @ts-nocheck
-import React from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import {
-  Flame,
-  Phone,
-  Mail,
-  MapPin,
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
-} from "lucide-react";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/lib/utils';
+import { Flame, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import logo from "../../../src/assets/ffslogo.jpg";
 
 export default function Footer() {

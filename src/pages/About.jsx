@@ -1,9 +1,8 @@
-// @ts-nocheck
-import React from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { motion } from "framer-motion";
-import { Target, Eye, Award, Users, Shield, ArrowRight } from "lucide-react";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { Target, Eye, Award, Users, Shield, ArrowRight } from 'lucide-react';
 import guardInspection from "../../src/assets/guard-inspection.jpg";
 import logo from "../../src/assets/ffslogo.jpg";
 

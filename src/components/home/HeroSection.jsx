@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Phone, Shield, ArrowRight } from 'lucide-react';
 import HeroImg from "../../../src/assets/hero-image.jpg";

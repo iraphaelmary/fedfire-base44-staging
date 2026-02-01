@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Download, Code, Share2, Copy, CheckCircle, FileJson, FileText, Rss } from 'lucide-react';
-import { 
-  formatPostForAPI, 
-  generateJSONFeed, 
-  generateRSSFeed, 
-  exportToCSV, 
-  downloadFile 
+import {
+  formatPostForAPI,
+  generateJSONFeed,
+  generateRSSFeed,
+  exportToCSV,
+  downloadFile
 } from '@/components/utils/shareAPI';
 
 export default function APIExport() {
   const [copied, setCopied] = useState(null);
 
-  const { data: posts = [] } = useQuery({
-    queryKey: ['published-posts'],
-    queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-created_date'),
-  });
+  const posts = useQuery(api.blogPosts.list, { published: true }) || [];
 
   const handleCopy = (text, type) => {
     navigator.clipboard.writeText(text);
@@ -71,7 +68,7 @@ export default function APIExport() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <section className="bg-[#1E3A5F] text-white py-12">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -85,7 +82,7 @@ export default function APIExport() {
       </section>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* API Endpoints */}
           <motion.div
@@ -134,7 +131,7 @@ export default function APIExport() {
               <div className="pt-4">
                 <h3 className="font-semibold text-gray-700 mb-2">Example Response:</h3>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
-{`{
+                  {`{
   "id": "123",
   "title": "Fire Safety Tips",
   "excerpt": "Learn essential...",
@@ -227,7 +224,7 @@ export default function APIExport() {
               <div>
                 <h3 className="font-semibold text-gray-700 mb-2">JavaScript Fetch</h3>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
-{`fetch('${apiEndpoint}')
+                  {`fetch('${apiEndpoint}')
   .then(res => res.json())
   .then(posts => {
     console.log(posts);
@@ -238,7 +235,7 @@ export default function APIExport() {
               <div>
                 <h3 className="font-semibold text-gray-700 mb-2">Python Requests</h3>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
-{`import requests
+                  {`import requests
 
 response = requests.get(
   '${apiEndpoint}'
@@ -250,7 +247,7 @@ posts = response.json()`}
               <div>
                 <h3 className="font-semibold text-gray-700 mb-2">cURL</h3>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
-{`curl -X GET \\
+                  {`curl -X GET \\
   '${apiEndpoint}' \\
   -H 'Accept: application/json'`}
                 </pre>
@@ -259,7 +256,7 @@ posts = response.json()`}
               <div>
                 <h3 className="font-semibold text-gray-700 mb-2">RSS Feed Reader</h3>
                 <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
-{`Add this URL to your
+                  {`Add this URL to your
 RSS reader:
 
 ${window.location.origin}

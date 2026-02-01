@@ -1,14 +1,13 @@
-// @ts-nocheck
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import { Calendar, User, Tag, Search, ArrowRight } from "lucide-react";
-import { format } from "date-fns";
-import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '@/lib/utils';
+import { useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import { motion } from 'framer-motion';
+import { Calendar, User, Tag, Search, ArrowRight } from 'lucide-react';
+import { format } from 'date-fns';
+import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import servicesBg from "../../src/assets/services-bg.jpg";
 
 const categories = [
@@ -32,25 +31,18 @@ export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: posts, isLoading } = useQuery({
-    queryKey: ["blog-posts"],
-    queryFn: () =>
-      base44.entities.BlogPost.filter({ published: true }, "-created_date"),
-    initialData: [],
-  });
+  const posts = useQuery(api.blogPosts.list, { published: true }) || [];
+  const isLoading = posts === undefined;
 
-  const filteredPosts = posts.filter((post) => {
-    const matchesCategory =
-      selectedCategory === "all" || post.category === selectedCategory;
-    const matchesSearch =
-      post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  const filteredPosts = posts.filter(post => {
+    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+    const matchesSearch = post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && (searchQuery === "" || matchesSearch);
+    return matchesCategory && (searchQuery === '' || matchesSearch);
   });
 
-  const featuredPost =
-    filteredPosts.find((p) => p.is_featured) || filteredPosts[0];
-  const otherPosts = filteredPosts.filter((p) => p.id !== featuredPost?.id);
+  const featuredPost = filteredPosts.find(p => p.is_featured) || filteredPosts[0];
+  const otherPosts = filteredPosts.filter(p => p._id !== featuredPost?._id);
 
   return (
     <div>
@@ -90,11 +82,10 @@ export default function Blog() {
                 <button
                   key={cat.value}
                   onClick={() => setSelectedCategory(cat.value)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    selectedCategory === cat.value
-                      ? "bg-[#C41E3A] text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === cat.value
+                    ? 'bg-[#C41E3A] text-white'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
                 >
                   {cat.label}
                 </button>
@@ -153,7 +144,7 @@ export default function Blog() {
                   className="mb-12"
                 >
                   <Link
-                    to={createPageUrl(`BlogPost?id=${featuredPost.id}`)}
+                    to={createPageUrl(`BlogPost?id=${featuredPost._id}`)}
                     className="group block bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
                   >
                     <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -192,12 +183,6 @@ export default function Blog() {
                               "MMM d, yyyy",
                             )}
                           </span>
-                          {featuredPost.author && (
-                            <span className="flex items-center gap-1">
-                              <User className="w-4 h-4" />
-                              {featuredPost.author}
-                            </span>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -209,14 +194,14 @@ export default function Blog() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {otherPosts.map((post, idx) => (
                   <motion.div
-                    key={post.id}
+                    key={post._id}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.05 }}
                   >
                     <Link
-                      to={createPageUrl(`BlogPost?id=${post.id}`)}
+                      to={createPageUrl(`BlogPost?id=${post._id}`)}
                       className="group block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all"
                     >
                       <div className="h-48 overflow-hidden">

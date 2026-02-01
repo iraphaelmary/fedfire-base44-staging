@@ -1,0 +1,37 @@
+# Dependencies
+node_modules
+
+# Build outputs (Vercel builds these itself)
+dist
+build
+.next
+
+# Development files
+.env
+.env.local
+.env*.local
+
+# Editor directories
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test coverage
+coverage
+
+# Convex local development (large files)
+convex-local-backend
+convex_local_storage
+convex_local_backend.sqlite3
+.convex

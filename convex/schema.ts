@@ -1,7 +1,31 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
+// import { authTables } from "@convex-dev/auth/server";
 
 export default defineSchema({
+  // ...authTables, // Removed for custom auth
+  users: defineTable({
+    email: v.string(),
+    passwordHash: v.optional(v.string()), // Made optional for migration
+    name: v.optional(v.string()),
+    image: v.optional(v.string()),
+    role: v.optional(v.string()), // "user" | "admin"
+    isVerified: v.optional(v.boolean()),
+    verificationCode: v.optional(v.string()),
+    resetToken: v.optional(v.string()),
+    resetTokenExpires: v.optional(v.number()),
+    resetCode: v.optional(v.string()),
+    resetCodeExpires: v.optional(v.number()),
+    created_date: v.optional(v.number()),
+  }).index("email", ["email"])
+    .index("role", ["role"]),
+
+  sessions: defineTable({
+    userId: v.id("users"),
+    token: v.string(),
+    expiresAt: v.number(),
+  }).index("token", ["token"]),
+
   blogPosts: defineTable({
     title: v.string(),
     slug: v.string(),
@@ -12,6 +36,7 @@ export default defineSchema({
     published: v.boolean(),
     is_featured: v.optional(v.boolean()),
     author_id: v.optional(v.string()),
+    author: v.optional(v.string()),
     created_date: v.number(),
     updated_date: v.optional(v.number()),
   })
@@ -38,12 +63,14 @@ export default defineSchema({
   })
     .index("by_status", ["status"]),
 
-  users: defineTable({
-    tokenIdentifier: v.string(), // This will be the JWT's 'sub' or similar unique ID
-    email: v.optional(v.string()),
-    name: v.optional(v.string()),
-    role: v.string(), // "user" | "admin"
+  invitations: defineTable({
+    email: v.string(),
+    token: v.string(),
+    invitedBy: v.id("users"),
+    status: v.string(), // "pending" | "accepted" | "expired"
+    expiresAt: v.number(),
     created_date: v.number(),
   })
-    .index("by_token", ["tokenIdentifier"]),
+    .index("email", ["email"])
+    .index("token", ["token"]),
 });

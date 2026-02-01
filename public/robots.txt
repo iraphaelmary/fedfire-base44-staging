@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fedfire-app.convex.site/sitemap.xml

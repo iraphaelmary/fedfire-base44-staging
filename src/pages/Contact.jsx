@@ -1,29 +1,19 @@
-// @ts-nocheck
-import React, { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
-import { useMutation } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Send,
-  CheckCircle,
-  AlertTriangle,
-  Shield,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import React, { useState, useEffect } from 'react';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import { motion } from 'framer-motion';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, AlertTriangle, Shield } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import {
   validateContactForm,
   sanitizeFormData,
   checkRateLimit,
   isHoneypotEmpty,
-  SECURITY_CONFIG,
-} from "@/components/utils/security";
+  SECURITY_CONFIG
+} from '@/components/utils/security';
 import servicesBg from "../../src/assets/services-bg.jpg";
 
 const contactInfo = [
@@ -88,24 +78,14 @@ export default function Contact() {
   const [rateLimitError, setRateLimitError] = useState("");
   const [securityToken, setSecurityToken] = useState("");
 
+  const submitContact = useMutation(api.contactMessages.create);
+  const [isPending, setIsPending] = useState(false);
+
   useEffect(() => {
     setSecurityToken(Date.now().toString(36) + Math.random().toString(36));
   }, []);
 
-  const submitMutation = useMutation({
-    mutationFn: (data) => base44.entities.ContactMessage.create(data),
-    onSuccess: () => {
-      setSubmitted(true);
-      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-      setErrors({});
-      setRateLimitError("");
-    },
-    onError: () => {
-      setErrors({ _submit: "Failed to send message. Please try again." });
-    },
-  });
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
     setRateLimitError("");
@@ -132,11 +112,16 @@ export default function Contact() {
     }
 
     const sanitizedData = sanitizeFormData(formData);
-    submitMutation.mutate({
-      ...sanitizedData,
-      _security_token: securityToken,
-      _timestamp: Date.now(),
-    });
+    setIsPending(true);
+    try {
+      await submitContact({ ...sanitizedData });
+      setSubmitted(true);
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+    } catch (error) {
+      setErrors({ _submit: 'Failed to send message. Please try again.' });
+    } finally {
+      setIsPending(false);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -232,9 +217,7 @@ export default function Contact() {
                 <span>Protected with OWASP security</span>
               </div>
 
-              <h2 className="text-2xl font-bold text-[#1E3A5F] mb-6">
-                Send us a Message
-              </h2>
+              <h2 className="text-2xl font-bold text-[#1E3A5F] mb-6">Send us a Message</h2>
 
               {rateLimitError && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -310,7 +293,7 @@ export default function Contact() {
                           handleInputChange("email", e.target.value)
                         }
                         required
-                        placeholder="your@email.com"
+                        placeholder="enter your email"
                         maxLength={SECURITY_CONFIG.MAX_EMAIL_LENGTH}
                         className={errors.email ? "border-red-500" : ""}
                       />
@@ -382,10 +365,10 @@ export default function Contact() {
                   <Button
                     type="submit"
                     className="bg-[#C41E3A] hover:bg-[#A01830] w-full md:w-auto"
-                    disabled={submitMutation.isPending}
+                    disabled={isPending}
                   >
-                    {submitMutation.isPending ? (
-                      "Sending..."
+                    {isPending ? (
+                      'Sending...'
                     ) : (
                       <>
                         <Send className="w-4 h-4 mr-2" />
