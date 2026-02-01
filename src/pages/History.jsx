@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Award, Users, Building2, Flame } from 'lucide-react';

@@ -1,19 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useMutation } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle, AlertTriangle, Shield } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { 
-  validateContactForm, 
-  sanitizeFormData, 
-  checkRateLimit, 
+// @ts-nocheck
+import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Send,
+  CheckCircle,
+  AlertTriangle,
+  Shield,
+} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import {
+  validateContactForm,
+  sanitizeFormData,
+  checkRateLimit,
   isHoneypotEmpty,
-  SECURITY_CONFIG 
-} from '@/components/utils/security';
+  SECURITY_CONFIG,
+} from "@/components/utils/security";
 import servicesBg from "../../src/assets/services-bg.jpg";
 
 const contactInfo = [
@@ -56,27 +66,27 @@ const contactInfo = [
 ];
 
 const stateCommands = [
-  { state: 'FCT Abuja', phone: '+234-xxx-xxx-xxxx' },
-  { state: 'Lagos', phone: '+234-xxx-xxx-xxxx' },
-  { state: 'Kano', phone: '+234-xxx-xxx-xxxx' },
-  { state: 'Rivers', phone: '+234-xxx-xxx-xxxx' },
-  { state: 'Kaduna', phone: '+234-xxx-xxx-xxxx' },
-  { state: 'Enugu', phone: '+234-xxx-xxx-xxxx' },
+  { state: "FCT Abuja", phone: "+234-xxx-xxx-xxxx" },
+  { state: "Lagos", phone: "+234-xxx-xxx-xxxx" },
+  { state: "Kano", phone: "+234-xxx-xxx-xxxx" },
+  { state: "Rivers", phone: "+234-xxx-xxx-xxxx" },
+  { state: "Kaduna", phone: "+234-xxx-xxx-xxxx" },
+  { state: "Enugu", phone: "+234-xxx-xxx-xxxx" },
 ];
 
 export default function Contact() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState({});
-  const [honeypot, setHoneypot] = useState('');
-  const [rateLimitError, setRateLimitError] = useState('');
-  const [securityToken, setSecurityToken] = useState('');
+  const [honeypot, setHoneypot] = useState("");
+  const [rateLimitError, setRateLimitError] = useState("");
+  const [securityToken, setSecurityToken] = useState("");
 
   useEffect(() => {
     setSecurityToken(Date.now().toString(36) + Math.random().toString(36));
@@ -86,26 +96,30 @@ export default function Contact() {
     mutationFn: (data) => base44.entities.ContactMessage.create(data),
     onSuccess: () => {
       setSubmitted(true);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
       setErrors({});
-      setRateLimitError('');
+      setRateLimitError("");
     },
     onError: () => {
-      setErrors({ _submit: 'Failed to send message. Please try again.' });
+      setErrors({ _submit: "Failed to send message. Please try again." });
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrors({});
-    setRateLimitError('');
+    setRateLimitError("");
 
     if (!isHoneypotEmpty(honeypot)) {
-      console.warn('Bot detected');
+      console.warn("Bot detected");
       return;
     }
 
-    const rateLimitCheck = checkRateLimit('contact_form', SECURITY_CONFIG.MAX_FORM_SUBMISSIONS, SECURITY_CONFIG.RATE_LIMIT_WINDOW_MS);
+    const rateLimitCheck = checkRateLimit(
+      "contact_form",
+      SECURITY_CONFIG.MAX_FORM_SUBMISSIONS,
+      SECURITY_CONFIG.RATE_LIMIT_WINDOW_MS,
+    );
     if (!rateLimitCheck.allowed) {
       setRateLimitError(rateLimitCheck.message);
       return;
@@ -118,13 +132,17 @@ export default function Contact() {
     }
 
     const sanitizedData = sanitizeFormData(formData);
-    submitMutation.mutate({ ...sanitizedData, _security_token: securityToken, _timestamp: Date.now() });
+    submitMutation.mutate({
+      ...sanitizedData,
+      _security_token: securityToken,
+      _timestamp: Date.now(),
+    });
   };
 
   const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 

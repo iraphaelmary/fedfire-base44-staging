@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { Menu, X, ChevronDown, Phone, Flame } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+// @ts-nocheck
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { Menu, X, ChevronDown, Phone, Flame } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "../../../src/assets/ffslogo.jpg";
 
 const navLinks = [
@@ -30,8 +31,8 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (

@@ -1,51 +1,56 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Calendar, User, Tag, Search, ArrowRight } from 'lucide-react';
-import { format } from 'date-fns';
-import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
+// @ts-nocheck
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Calendar, User, Tag, Search, ArrowRight } from "lucide-react";
+import { format } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import servicesBg from "../../src/assets/services-bg.jpg";
 
 const categories = [
-  { value: 'all', label: 'All Posts' },
-  { value: 'news', label: 'News' },
-  { value: 'press_release', label: 'Press Releases' },
-  { value: 'safety_tips', label: 'Safety Tips' },
-  { value: 'events', label: 'Events' },
-  { value: 'announcements', label: 'Announcements' },
+  { value: "all", label: "All Posts" },
+  { value: "news", label: "News" },
+  { value: "press_release", label: "Press Releases" },
+  { value: "safety_tips", label: "Safety Tips" },
+  { value: "events", label: "Events" },
+  { value: "announcements", label: "Announcements" },
 ];
 
 const categoryColors = {
-  news: 'bg-blue-100 text-blue-800',
-  press_release: 'bg-purple-100 text-purple-800',
-  safety_tips: 'bg-green-100 text-green-800',
-  events: 'bg-orange-100 text-orange-800',
-  announcements: 'bg-red-100 text-red-800',
+  news: "bg-blue-100 text-blue-800",
+  press_release: "bg-purple-100 text-purple-800",
+  safety_tips: "bg-green-100 text-green-800",
+  events: "bg-orange-100 text-orange-800",
+  announcements: "bg-red-100 text-red-800",
 };
 
 export default function Blog() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { data: posts, isLoading } = useQuery({
-    queryKey: ['blog-posts'],
-    queryFn: () => base44.entities.BlogPost.filter({ published: true }, '-created_date'),
+    queryKey: ["blog-posts"],
+    queryFn: () =>
+      base44.entities.BlogPost.filter({ published: true }, "-created_date"),
     initialData: [],
   });
 
-  const filteredPosts = posts.filter(post => {
-    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
-    const matchesSearch = post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && (searchQuery === '' || matchesSearch);
+  const filteredPosts = posts.filter((post) => {
+    const matchesCategory =
+      selectedCategory === "all" || post.category === selectedCategory;
+    const matchesSearch =
+      post.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && (searchQuery === "" || matchesSearch);
   });
 
-  const featuredPost = filteredPosts.find(p => p.is_featured) || filteredPosts[0];
-  const otherPosts = filteredPosts.filter(p => p.id !== featuredPost?.id);
+  const featuredPost =
+    filteredPosts.find((p) => p.is_featured) || filteredPosts[0];
+  const otherPosts = filteredPosts.filter((p) => p.id !== featuredPost?.id);
 
   return (
     <div>

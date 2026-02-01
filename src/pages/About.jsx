@@ -1,16 +1,36 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { motion } from 'framer-motion';
-import { Target, Eye, Award, Users, Shield, ArrowRight } from 'lucide-react';
+// @ts-nocheck
+import React from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { motion } from "framer-motion";
+import { Target, Eye, Award, Users, Shield, ArrowRight } from "lucide-react";
 import guardInspection from "../../src/assets/guard-inspection.jpg";
 import logo from "../../src/assets/ffslogo.jpg";
 
 const values = [
-  { icon: Shield, title: 'Integrity', description: 'We uphold the highest standards of professionalism and ethical conduct.' },
-  { icon: Users, title: 'Service', description: 'We are dedicated to serving the Nigerian people with excellence.' },
-  { icon: Target, title: 'Excellence', description: 'We strive for continuous improvement in all our operations.' },
-  { icon: Award, title: 'Commitment', description: 'We are committed to protecting lives and property at all times.' },
+  {
+    icon: Shield,
+    title: "Integrity",
+    description:
+      "We uphold the highest standards of professionalism and ethical conduct.",
+  },
+  {
+    icon: Users,
+    title: "Service",
+    description:
+      "We are dedicated to serving the Nigerian people with excellence.",
+  },
+  {
+    icon: Target,
+    title: "Excellence",
+    description: "We strive for continuous improvement in all our operations.",
+  },
+  {
+    icon: Award,
+    title: "Commitment",
+    description:
+      "We are committed to protecting lives and property at all times.",
+  },
 ];
 
 export default function About() {

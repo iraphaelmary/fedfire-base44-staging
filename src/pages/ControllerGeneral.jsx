@@ -1,25 +1,40 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Award, GraduationCap, Briefcase, Calendar, Mail, Phone, MapPin } from 'lucide-react';
+// @ts-nocheck
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  Award,
+  GraduationCap,
+  Briefcase,
+  Calendar,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 import servicesBg from "../../src/assets/services-bg.jpg";
 import cgSign from "../../src/assets/cg-sign.jpg";
 
 const achievements = [
-  'Modernization of firefighting equipment across all state commands',
-  'Implementation of the National Fire Safety Code',
-  'Establishment of specialized rescue and hazmat units',
-  'Expansion of fire stations to underserved communities',
-  'Launch of public fire safety awareness campaigns',
-  'Training partnerships with international fire agencies',
+  "Modernization of firefighting equipment across all state commands",
+  "Implementation of the National Fire Safety Code",
+  "Establishment of specialized rescue and hazmat units",
+  "Expansion of fire stations to underserved communities",
+  "Launch of public fire safety awareness campaigns",
+  "Training partnerships with international fire agencies",
 ];
 
 const career = [
-  { year: '1985', position: 'Joined the Federal Fire Service as Cadet Officer' },
-  { year: '1992', position: 'Promoted to Assistant Superintendent of Fire' },
-  { year: '2000', position: 'Appointed Zonal Commander, North Central Zone' },
-  { year: '2008', position: 'Promoted to Deputy Controller of Fire' },
-  { year: '2015', position: 'Appointed Assistant Controller General' },
-  { year: '2020', position: 'Appointed Controller General of Federal Fire Service' },
+  {
+    year: "1985",
+    position: "Joined the Federal Fire Service as Cadet Officer",
+  },
+  { year: "1992", position: "Promoted to Assistant Superintendent of Fire" },
+  { year: "2000", position: "Appointed Zonal Commander, North Central Zone" },
+  { year: "2008", position: "Promoted to Deputy Controller of Fire" },
+  { year: "2015", position: "Appointed Assistant Controller General" },
+  {
+    year: "2020",
+    position: "Appointed Controller General of Federal Fire Service",
+  },
 ];
 
 export default function ControllerGeneral() {
