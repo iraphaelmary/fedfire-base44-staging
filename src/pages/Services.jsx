@@ -4,6 +4,7 @@ import {
   Flame, Shield, AlertTriangle, Users, Building2, FileCheck, 
   Truck, Droplets, GraduationCap, Search, Phone, ArrowRight 
 } from 'lucide-react';
+import servicesBg from "../../src/assets/services-bg.jpg";
 
 const services = [
   {
@@ -69,10 +70,10 @@ export default function Services() {
     <div>
       {/* Hero Section */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=2080')`
+            backgroundImage: `url(${servicesBg})`,
           }}
         >
           <div className="absolute inset-0 bg-[#1E3A5F]/90" />
@@ -82,7 +83,9 @@ export default function Services() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Our Services</h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              Our Services
+            </h1>
             <p className="text-xl text-gray-300 max-w-2xl">
               Comprehensive fire protection and emergency services for Nigeria.
             </p>
@@ -99,13 +102,15 @@ export default function Services() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">What We Offer</span>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              What We Offer
+            </span>
             <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3 mb-4">
               Comprehensive Fire Services
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              The Federal Fire Service provides a wide range of services to protect lives and property 
-              across Nigeria.
+              The Federal Fire Service provides a wide range of services to
+              protect lives and property across Nigeria.
             </p>
           </motion.div>
 
@@ -123,22 +128,31 @@ export default function Services() {
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     {/* Icon & Title */}
                     <div className="lg:col-span-4 flex items-center gap-6">
-                      <div className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                      <div
+                        className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}
+                      >
                         <service.icon className="w-8 h-8 text-white" />
                       </div>
-                      <h3 className="text-xl font-bold text-[#1E3A5F]">{service.title}</h3>
+                      <h3 className="text-xl font-bold text-[#1E3A5F]">
+                        {service.title}
+                      </h3>
                     </div>
 
                     {/* Description */}
                     <div className="lg:col-span-5">
-                      <p className="text-gray-600 leading-relaxed">{service.description}</p>
+                      <p className="text-gray-600 leading-relaxed">
+                        {service.description}
+                      </p>
                     </div>
 
                     {/* Features */}
                     <div className="lg:col-span-3">
                       <ul className="space-y-2">
                         {service.features.map((feature, fIdx) => (
-                          <li key={fIdx} className="flex items-center gap-2 text-sm text-gray-600">
+                          <li
+                            key={fIdx}
+                            className="flex items-center gap-2 text-sm text-gray-600"
+                          >
                             <div className="w-1.5 h-1.5 bg-[#C41E3A] rounded-full" />
                             {feature}
                           </li>
@@ -162,7 +176,9 @@ export default function Services() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Get Started</span>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              Get Started
+            </span>
             <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">
               How to Request Our Services
             </h2>
@@ -170,9 +186,24 @@ export default function Services() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { step: '1', title: 'Contact Us', description: 'Reach out through phone, email, or visit the nearest fire station.' },
-              { step: '2', title: 'Schedule Inspection', description: 'Our team will arrange a convenient time for inspection or consultation.' },
-              { step: '3', title: 'Get Certified', description: 'Upon compliance, receive your fire safety certificate or report.' },
+              {
+                step: "1",
+                title: "Contact Us",
+                description:
+                  "Reach out through phone, email, or visit the nearest fire station.",
+              },
+              {
+                step: "2",
+                title: "Schedule Inspection",
+                description:
+                  "Our team will arrange a convenient time for inspection or consultation.",
+              },
+              {
+                step: "3",
+                title: "Get Certified",
+                description:
+                  "Upon compliance, receive your fire safety certificate or report.",
+              },
             ].map((item, idx) => (
               <motion.div
                 key={item.step}
@@ -185,7 +216,9 @@ export default function Services() {
                 <div className="w-16 h-16 bg-[#C41E3A] rounded-full flex items-center justify-center mx-auto mb-4 text-white text-2xl font-bold">
                   {item.step}
                 </div>
-                <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">{item.title}</h3>
+                <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">
+                  {item.title}
+                </h3>
                 <p className="text-gray-600">{item.description}</p>
               </motion.div>
             ))}
@@ -205,15 +238,15 @@ export default function Services() {
               Emergency? Call Now!
             </h2>
             <p className="text-white/80 text-lg mb-8">
-              For fire emergencies, rescue operations, or any life-threatening situation, 
-              call our emergency line immediately.
+              For fire emergencies, rescue operations, or any life-threatening
+              situation, call our emergency line immediately.
             </p>
             <a
-              href="tel:112"
+              href="tel:08032003557"
               className="inline-flex items-center gap-3 bg-white text-[#C41E3A] px-10 py-5 rounded-full font-bold text-2xl hover:bg-gray-100 transition-colors"
             >
               <Phone className="w-8 h-8" />
-              Dial 112
+              Dial 08032003557
             </a>
           </motion.div>
         </div>

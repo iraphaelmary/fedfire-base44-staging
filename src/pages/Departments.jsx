@@ -4,6 +4,7 @@ import {
   Flame, Shield, GraduationCap, Users, FileText, Briefcase, 
   Building2, Truck, Search, Globe, Stethoscope, Wrench 
 } from 'lucide-react';
+import servicesBg from "../../src/assets/services-bg.jpg";
 
 const departments = [
   {
@@ -152,10 +153,10 @@ export default function Departments() {
     <div>
       {/* Hero Section */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070')`
+            backgroundImage: `url(${servicesBg})`,
           }}
         >
           <div className="absolute inset-0 bg-[#1E3A5F]/90" />
@@ -165,9 +166,12 @@ export default function Departments() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Departments</h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              Departments
+            </h1>
             <p className="text-xl text-gray-300 max-w-2xl">
-              Our organizational structure designed for effective fire service delivery.
+              Our organizational structure designed for effective fire service
+              delivery.
             </p>
           </motion.div>
         </div>
@@ -182,13 +186,15 @@ export default function Departments() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Organization</span>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              Organization
+            </span>
             <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3 mb-4">
               Headquarters Departments
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              The Federal Fire Service is organized into specialized departments to ensure 
-              efficient service delivery.
+              The Federal Fire Service is organized into specialized departments
+              to ensure efficient service delivery.
             </p>
           </motion.div>
 
@@ -203,20 +209,29 @@ export default function Departments() {
                 className="bg-gray-50 rounded-2xl p-8 hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-100 hover:bg-white"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className={`w-14 h-14 ${dept.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                  <div
+                    className={`w-14 h-14 ${dept.color} rounded-xl flex items-center justify-center flex-shrink-0`}
+                  >
                     <dept.icon className="w-7 h-7 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#1E3A5F]">{dept.name}</h3>
+                    <h3 className="text-xl font-bold text-[#1E3A5F]">
+                      {dept.name}
+                    </h3>
                     <p className="text-sm text-[#C41E3A]">{dept.head}</p>
                   </div>
                 </div>
                 <p className="text-gray-600 mb-4">{dept.description}</p>
                 <div className="border-t pt-4">
-                  <p className="text-sm font-semibold text-[#1E3A5F] mb-2">Key Functions:</p>
+                  <p className="text-sm font-semibold text-[#1E3A5F] mb-2">
+                    Key Functions:
+                  </p>
                   <ul className="grid grid-cols-2 gap-2">
                     {dept.functions.map((func, fIdx) => (
-                      <li key={fIdx} className="flex items-center gap-2 text-sm text-gray-600">
+                      <li
+                        key={fIdx}
+                        className="flex items-center gap-2 text-sm text-gray-600"
+                      >
                         <div className="w-1.5 h-1.5 bg-[#D4AF37] rounded-full" />
                         {func}
                       </li>
@@ -238,12 +253,15 @@ export default function Departments() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-[#D4AF37] font-semibold text-sm uppercase tracking-wider">Nationwide Coverage</span>
+            <span className="text-[#D4AF37] font-semibold text-sm uppercase tracking-wider">
+              Nationwide Coverage
+            </span>
             <h2 className="text-3xl md:text-4xl font-bold text-white mt-3 mb-4">
               Zonal Commands
             </h2>
             <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-              The FFS operates through zonal commands to ensure effective coverage across all states.
+              The FFS operates through zonal commands to ensure effective
+              coverage across all states.
             </p>
           </motion.div>
 
@@ -261,7 +279,9 @@ export default function Departments() {
                   <Building2 className="w-6 h-6 text-[#D4AF37]" />
                   <h3 className="text-xl font-bold text-white">{zone.zone}</h3>
                 </div>
-                <p className="text-[#D4AF37] font-medium mb-2">HQ: {zone.headquarters}</p>
+                <p className="text-[#D4AF37] font-medium mb-2">
+                  HQ: {zone.headquarters}
+                </p>
                 <p className="text-gray-300 text-sm">{zone.states}</p>
               </motion.div>
             ))}
@@ -281,9 +301,10 @@ export default function Departments() {
               36 State Commands + FCT
             </h2>
             <p className="text-gray-600 text-lg mb-8">
-              The Federal Fire Service maintains a command in each of Nigeria's 36 states 
-              and the Federal Capital Territory, ensuring comprehensive coverage and rapid 
-              response capabilities across the nation.
+              The Federal Fire Service maintains a command in each of Nigeria's
+              36 states and the Federal Capital Territory, ensuring
+              comprehensive coverage and rapid response capabilities across the
+              nation.
             </p>
             <div className="bg-[#C41E3A] text-white rounded-2xl p-8 inline-block">
               <p className="text-4xl font-bold">150+</p>

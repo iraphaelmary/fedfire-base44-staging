@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import Stat1 from "../../../src/assets/stat1.jpg";
+import Stat2 from "../../../src/assets/stat2.jpg";
+import Stat3 from "../../../src/assets/stat3.jpg";
+import Stat4 from "../../../src/assets/stat4.jpg";
 
 const highlights = [
   'Over 60 years of dedicated service to Nigeria',
@@ -28,24 +32,24 @@ export default function AboutPreview() {
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div className="space-y-3 md:space-y-4">
                 <img
-                  src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?q=80&w=1931"
+                  src={Stat1}
                   alt="Fire Service Training"
                   className="w-full h-32 md:h-48 object-cover rounded-xl md:rounded-2xl"
                 />
                 <img
-                  src="https://images.unsplash.com/photo-1582139329536-e7284fece509?q=80&w=2080"
+                  src={Stat2}
                   alt="Fire Truck"
                   className="w-full h-48 md:h-64 object-cover rounded-xl md:rounded-2xl"
                 />
               </div>
               <div className="space-y-3 md:space-y-4 pt-6 md:pt-8">
                 <img
-                  src="https://images.unsplash.com/photo-1601662528567-526cd06f6582?q=80&w=2015"
+                  src={Stat3}
                   alt="Firefighters"
                   className="w-full h-48 md:h-64 object-cover rounded-xl md:rounded-2xl"
                 />
                 <img
-                  src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070"
+                  src={Stat4}
                   alt="Modern Building"
                   className="w-full h-32 md:h-48 object-cover rounded-xl md:rounded-2xl"
                 />
@@ -64,35 +68,40 @@ export default function AboutPreview() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-[#D4AF37] font-semibold text-xs md:text-sm uppercase tracking-wider">About Us</span>
+            <span className="text-[#D4AF37] font-semibold text-xs md:text-sm uppercase tracking-wider">
+              About Us
+            </span>
             <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mt-3 mb-4 md:mb-6">
               Protecting Lives & Property Across Nigeria
             </h2>
             <p className="text-gray-300 text-base md:text-lg leading-relaxed mb-6 md:mb-8">
-              The Federal Fire Service (FFS) is a federal government agency under the 
-              Federal Ministry of Interior, established to prevent and combat fires, 
-              provide rescue services, and protect lives and property throughout Nigeria.
+              The Federal Fire Service (FFS) is a federal government agency
+              under the Federal Ministry of Interior, established to prevent and
+              combat fires, provide rescue services, and protect lives and
+              property throughout Nigeria.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
               {highlights.map((item, idx) => (
                 <div key={idx} className="flex items-center gap-2 md:gap-3">
                   <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-[#D4AF37] flex-shrink-0" />
-                  <span className="text-sm md:text-base text-gray-300">{item}</span>
+                  <span className="text-sm md:text-base text-gray-300">
+                    {item}
+                  </span>
                 </div>
               ))}
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               <Link
-                to={createPageUrl('About')}
+                to={createPageUrl("About")}
                 className="inline-flex items-center justify-center gap-2 bg-[#C41E3A] text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold text-sm md:text-base hover:bg-[#A01830] transition-colors"
               >
                 Learn More About Us
                 <ArrowRight className="w-4 h-4 md:w-5 md:h-5" />
               </Link>
               <Link
-                to={createPageUrl('ControllerGeneral')}
+                to={createPageUrl("ControllerGeneral")}
                 className="inline-flex items-center justify-center gap-2 bg-white/10 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold text-sm md:text-base border border-white/20 hover:bg-white/20 transition-colors"
               >
                 Meet the Controller General

@@ -3,107 +3,139 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
 import { Award, GraduationCap, Mail, Phone, ArrowRight } from 'lucide-react';
+import servicesBg from "../../src/assets/services-bg.jpg";
+import cgSign from "../../src/assets/cg-sign.jpg";
 
 const leaders = [
   {
-    name: 'Dr. Jaji Olajide Abdulganiyu, mni',
-    rank: 'Controller General of Fire (CGF)',
-    title: 'Controller General',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974',
-    education: ['Ph.D. Public Administration', 'M.Sc. Fire Service Administration', 'Member, National Institute (mni)'],
-    experience: '35+ years in fire service',
-    responsibilities: 'Overall leadership and strategic direction of the Federal Fire Service',
+    name: "Dr. Olumode Samuel, mni",
+    rank: "Controller General of Fire (CGF)",
+    title: "Controller General",
+    image: cgSign,
+    education: [
+      "Ph.D. Public Administration",
+      "M.Sc. Fire Service Administration",
+      "Member, National Institute (mni)",
+    ],
+    experience: "35+ years in fire service",
+    responsibilities:
+      "Overall leadership and strategic direction of the Federal Fire Service",
     isCG: true,
   },
   {
-    name: 'Engr. Mohammed Bello Ibrahim',
-    rank: 'Deputy Controller General of Fire (DCG)',
-    title: 'DCG Operations',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070',
-    education: ['M.Sc. Fire Engineering', 'B.Eng. Mechanical Engineering'],
-    experience: '30+ years in fire service',
-    responsibilities: 'Oversees all firefighting and emergency response operations nationwide',
+    name: "Engr. Mohammed Bello Ibrahim",
+    rank: "Deputy Controller General of Fire (DCG)",
+    title: "DCG Operations",
+    image:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070",
+    education: ["M.Sc. Fire Engineering", "B.Eng. Mechanical Engineering"],
+    experience: "30+ years in fire service",
+    responsibilities:
+      "Oversees all firefighting and emergency response operations nationwide",
   },
   {
-    name: 'Mrs. Amina Suleiman Yusuf',
-    rank: 'Deputy Controller General of Fire (DCG)',
-    title: 'DCG Administration',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976',
-    education: ['M.Sc. Public Administration', 'B.Sc. Business Administration'],
-    experience: '28+ years in fire service',
-    responsibilities: 'Manages administrative functions, human resources, and financial operations',
+    name: "Mrs. Amina Suleiman Yusuf",
+    rank: "Deputy Controller General of Fire (DCG)",
+    title: "DCG Administration",
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976",
+    education: ["M.Sc. Public Administration", "B.Sc. Business Administration"],
+    experience: "28+ years in fire service",
+    responsibilities:
+      "Manages administrative functions, human resources, and financial operations",
   },
   {
-    name: 'Engr. Chukwuemeka Okonkwo',
-    rank: 'Deputy Controller General of Fire (DCG)',
-    title: 'DCG Logistics',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974',
-    education: ['M.Eng. Fire Safety Engineering', 'B.Eng. Electrical Engineering'],
-    experience: '27+ years in fire service',
-    responsibilities: 'Procurement, maintenance, and distribution of firefighting equipment and vehicles',
+    name: "Engr. Chukwuemeka Okonkwo",
+    rank: "Deputy Controller General of Fire (DCG)",
+    title: "DCG Logistics",
+    image:
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974",
+    education: [
+      "M.Eng. Fire Safety Engineering",
+      "B.Eng. Electrical Engineering",
+    ],
+    experience: "27+ years in fire service",
+    responsibilities:
+      "Procurement, maintenance, and distribution of firefighting equipment and vehicles",
   },
   {
-    name: 'Dr. Fatima Abubakar Garba',
-    rank: 'Deputy Controller General of Fire (DCG)',
-    title: 'DCG Prevention',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961',
-    education: ['Ph.D. Fire Science', 'M.Sc. Fire Prevention'],
-    experience: '26+ years in fire service',
-    responsibilities: 'Fire safety inspections, certifications, and public awareness campaigns',
+    name: "Dr. Fatima Abubakar Garba",
+    rank: "Deputy Controller General of Fire (DCG)",
+    title: "DCG Prevention",
+    image:
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961",
+    education: ["Ph.D. Fire Science", "M.Sc. Fire Prevention"],
+    experience: "26+ years in fire service",
+    responsibilities:
+      "Fire safety inspections, certifications, and public awareness campaigns",
   },
   {
-    name: 'Mr. Adebayo Oladipo Akinyemi',
-    rank: 'Assistant Controller General of Fire (ACG)',
-    title: 'ACG Training',
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974',
-    education: ['M.Sc. Fire Service Management', 'Advanced Fire Training (UK)'],
-    experience: '24+ years in fire service',
-    responsibilities: 'Training programs, professional development, and capacity building',
+    name: "Mr. Adebayo Oladipo Akinyemi",
+    rank: "Assistant Controller General of Fire (ACG)",
+    title: "ACG Training",
+    image:
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974",
+    education: ["M.Sc. Fire Service Management", "Advanced Fire Training (UK)"],
+    experience: "24+ years in fire service",
+    responsibilities:
+      "Training programs, professional development, and capacity building",
   },
   {
-    name: 'Mr. Usman Danladi Muhammed',
-    rank: 'Assistant Controller General of Fire (ACG)',
-    title: 'ACG Investigation',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974',
-    education: ['M.Sc. Forensic Science', 'Fire Investigation Certification (USA)'],
-    experience: '23+ years in fire service',
-    responsibilities: 'Fire investigation, forensic analysis, and evidence collection',
+    name: "Mr. Usman Danladi Muhammed",
+    rank: "Assistant Controller General of Fire (ACG)",
+    title: "ACG Investigation",
+    image:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1974",
+    education: [
+      "M.Sc. Forensic Science",
+      "Fire Investigation Certification (USA)",
+    ],
+    experience: "23+ years in fire service",
+    responsibilities:
+      "Fire investigation, forensic analysis, and evidence collection",
   },
   {
-    name: 'Mrs. Grace Nneka Eze',
-    rank: 'Assistant Controller General of Fire (ACG)',
-    title: 'ACG Human Resources',
-    image: 'https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=1974',
-    education: ['M.Sc. Human Resource Management', 'B.Sc. Psychology'],
-    experience: '22+ years in fire service',
-    responsibilities: 'Recruitment, welfare, promotions, and staff development',
+    name: "Mrs. Grace Nneka Eze",
+    rank: "Assistant Controller General of Fire (ACG)",
+    title: "ACG Human Resources",
+    image:
+      "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=1974",
+    education: ["M.Sc. Human Resource Management", "B.Sc. Psychology"],
+    experience: "22+ years in fire service",
+    responsibilities: "Recruitment, welfare, promotions, and staff development",
   },
   {
-    name: 'Engr. Yakubu Musa Abdullahi',
-    rank: 'Assistant Controller General of Fire (ACG)',
-    title: 'ACG Works',
-    image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1974',
-    education: ['M.Eng. Civil Engineering', 'B.Eng. Building Technology'],
-    experience: '21+ years in fire service',
-    responsibilities: 'Fire station construction, facility maintenance, and infrastructure development',
+    name: "Engr. Yakubu Musa Abdullahi",
+    rank: "Assistant Controller General of Fire (ACG)",
+    title: "ACG Works",
+    image:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1974",
+    education: ["M.Eng. Civil Engineering", "B.Eng. Building Technology"],
+    experience: "21+ years in fire service",
+    responsibilities:
+      "Fire station construction, facility maintenance, and infrastructure development",
   },
   {
-    name: 'Mr. Oluwaseun Afolabi Johnson',
-    rank: 'Assistant Controller General of Fire (ACG)',
-    title: 'ACG Public Relations',
-    image: 'https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=2070',
-    education: ['M.Sc. Mass Communication', 'B.Sc. Journalism'],
-    experience: '20+ years in fire service',
-    responsibilities: 'Media relations, public communications, and community engagement',
+    name: "Mr. Oluwaseun Afolabi Johnson",
+    rank: "Assistant Controller General of Fire (ACG)",
+    title: "ACG Public Relations",
+    image:
+      "https://images.unsplash.com/photo-1463453091185-61582044d556?q=80&w=2070",
+    education: ["M.Sc. Mass Communication", "B.Sc. Journalism"],
+    experience: "20+ years in fire service",
+    responsibilities:
+      "Media relations, public communications, and community engagement",
   },
   {
-    name: 'Dr. Hauwa Ibrahim Abubakar',
-    rank: 'Assistant Controller General of Fire (ACG)',
-    title: 'ACG Planning & Research',
-    image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=1974',
-    education: ['Ph.D. Strategic Management', 'M.Sc. Policy Analysis'],
-    experience: '19+ years in fire service',
-    responsibilities: 'Strategic planning, policy development, and research coordination',
+    name: "Dr. Hauwa Ibrahim Abubakar",
+    rank: "Assistant Controller General of Fire (ACG)",
+    title: "ACG Planning & Research",
+    image:
+      "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?q=80&w=1974",
+    education: ["Ph.D. Strategic Management", "M.Sc. Policy Analysis"],
+    experience: "19+ years in fire service",
+    responsibilities:
+      "Strategic planning, policy development, and research coordination",
   },
 ];
 
@@ -116,10 +148,10 @@ export default function Leadership() {
     <div>
       {/* Hero Section */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070')`
+            backgroundImage: `url(${servicesBg})`,
           }}
         >
           <div className="absolute inset-0 bg-[#1E3A5F]/90" />
@@ -129,9 +161,12 @@ export default function Leadership() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Our Leadership</h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              Our Leadership
+            </h1>
             <p className="text-xl text-gray-300 max-w-2xl">
-              Meet the distinguished officers leading the Federal Fire Service of Nigeria.
+              Meet the distinguished officers leading the Federal Fire Service
+              of Nigeria.
             </p>
           </motion.div>
         </div>
@@ -146,8 +181,12 @@ export default function Leadership() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Head of Service</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">Controller General</h2>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              Head of Service
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">
+              Controller General
+            </h2>
           </motion.div>
 
           {cg && (
@@ -172,32 +211,45 @@ export default function Leadership() {
                     </div>
                   </div>
                   <div className="md:col-span-2 text-white">
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{cg.name}</h3>
-                    <p className="text-[#D4AF37] font-medium text-lg mb-6">{cg.title}</p>
-                    
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                      {cg.name}
+                    </h3>
+                    <p className="text-[#D4AF37] font-medium text-lg mb-6">
+                      {cg.title}
+                    </p>
+
                     <div className="space-y-4 mb-6">
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-400 mb-2">EDUCATION & QUALIFICATIONS</h4>
+                        <h4 className="text-sm font-semibold text-gray-400 mb-2">
+                          EDUCATION & QUALIFICATIONS
+                        </h4>
                         <div className="flex flex-wrap gap-2">
                           {cg.education.map((edu, idx) => (
-                            <span key={idx} className="bg-white/10 px-3 py-1 rounded-full text-sm">
+                            <span
+                              key={idx}
+                              className="bg-white/10 px-3 py-1 rounded-full text-sm"
+                            >
                               {edu}
                             </span>
                           ))}
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-400 mb-2">EXPERIENCE</h4>
+                        <h4 className="text-sm font-semibold text-gray-400 mb-2">
+                          EXPERIENCE
+                        </h4>
                         <p className="text-gray-300">{cg.experience}</p>
                       </div>
                       <div>
-                        <h4 className="text-sm font-semibold text-gray-400 mb-2">RESPONSIBILITIES</h4>
+                        <h4 className="text-sm font-semibold text-gray-400 mb-2">
+                          RESPONSIBILITIES
+                        </h4>
                         <p className="text-gray-300">{cg.responsibilities}</p>
                       </div>
                     </div>
 
                     <Link
-                      to={createPageUrl('ControllerGeneral')}
+                      to={createPageUrl("ControllerGeneral")}
                       className="inline-flex items-center gap-2 bg-[#C41E3A] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#A01830] transition-all hover:gap-4"
                     >
                       View Full Profile
@@ -220,10 +272,15 @@ export default function Leadership() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Senior Leadership</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">Deputy Controller Generals</h2>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              Senior Leadership
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">
+              Deputy Controller Generals
+            </h2>
             <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
-              The Deputy Controller Generals oversee major departments and support the Controller General in strategic operations.
+              The Deputy Controller Generals oversee major departments and
+              support the Controller General in strategic operations.
             </p>
           </motion.div>
 
@@ -249,21 +306,31 @@ export default function Leadership() {
                     <span className="inline-block bg-[#C41E3A]/10 text-[#C41E3A] px-3 py-1 rounded-full text-xs font-semibold mb-3">
                       {leader.rank}
                     </span>
-                    <h3 className="text-xl font-bold text-[#1E3A5F] mb-1">{leader.name}</h3>
-                    <p className="text-[#D4AF37] font-medium text-sm mb-4">{leader.title}</p>
-                    
+                    <h3 className="text-xl font-bold text-[#1E3A5F] mb-1">
+                      {leader.name}
+                    </h3>
+                    <p className="text-[#D4AF37] font-medium text-sm mb-4">
+                      {leader.title}
+                    </p>
+
                     <div className="space-y-3 text-sm">
                       <div>
                         <p className="text-gray-500 font-medium">Education:</p>
-                        <p className="text-gray-700">{leader.education.join(', ')}</p>
+                        <p className="text-gray-700">
+                          {leader.education.join(", ")}
+                        </p>
                       </div>
                       <div>
                         <p className="text-gray-500 font-medium">Experience:</p>
                         <p className="text-gray-700">{leader.experience}</p>
                       </div>
                       <div>
-                        <p className="text-gray-500 font-medium">Responsibilities:</p>
-                        <p className="text-gray-700">{leader.responsibilities}</p>
+                        <p className="text-gray-500 font-medium">
+                          Responsibilities:
+                        </p>
+                        <p className="text-gray-700">
+                          {leader.responsibilities}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -283,10 +350,15 @@ export default function Leadership() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Management Team</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">Assistant Controller Generals</h2>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              Management Team
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">
+              Assistant Controller Generals
+            </h2>
             <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
-              Our Assistant Controller Generals lead specialized units and ensure operational excellence across all functions.
+              Our Assistant Controller Generals lead specialized units and
+              ensure operational excellence across all functions.
             </p>
           </motion.div>
 
@@ -310,11 +382,15 @@ export default function Leadership() {
                     <span className="inline-block bg-[#1E3A5F]/10 text-[#1E3A5F] px-2 py-0.5 rounded text-xs font-semibold mb-1">
                       ACG
                     </span>
-                    <h3 className="font-bold text-[#1E3A5F] leading-tight">{leader.name}</h3>
-                    <p className="text-[#C41E3A] text-sm font-medium">{leader.title}</p>
+                    <h3 className="font-bold text-[#1E3A5F] leading-tight">
+                      {leader.name}
+                    </h3>
+                    <p className="text-[#C41E3A] text-sm font-medium">
+                      {leader.title}
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-2 text-sm">
                   <div className="flex items-start gap-2">
                     <GraduationCap className="w-4 h-4 text-[#D4AF37] flex-shrink-0 mt-0.5" />
@@ -325,10 +401,14 @@ export default function Leadership() {
                     <p className="text-gray-600">{leader.experience}</p>
                   </div>
                 </div>
-                
+
                 <div className="mt-4 pt-4 border-t">
-                  <p className="text-xs text-gray-500 font-medium mb-1">RESPONSIBILITIES</p>
-                  <p className="text-sm text-gray-700">{leader.responsibilities}</p>
+                  <p className="text-xs text-gray-500 font-medium mb-1">
+                    RESPONSIBILITIES
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    {leader.responsibilities}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -348,17 +428,18 @@ export default function Leadership() {
               Learn More About Our Organization
             </h2>
             <p className="text-gray-300 mb-8">
-              Explore our departments, services, and how we protect lives and property across Nigeria.
+              Explore our departments, services, and how we protect lives and
+              property across Nigeria.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to={createPageUrl('Departments')}
+                to={createPageUrl("Departments")}
                 className="inline-flex items-center justify-center gap-2 bg-[#C41E3A] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#A01830] transition-colors"
               >
                 View Departments
               </Link>
               <Link
-                to={createPageUrl('Contact')}
+                to={createPageUrl("Contact")}
                 className="inline-flex items-center justify-center gap-2 bg-white/10 text-white px-6 py-3 rounded-full font-semibold border border-white/20 hover:bg-white/20 transition-colors"
               >
                 Contact Us

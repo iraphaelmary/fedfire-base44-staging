@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, MapPin, Award, Users, Building2, Flame } from 'lucide-react';
+import servicesBg from "../../src/assets/services-bg.jpg";
 
 const timeline = [
   {
@@ -65,10 +66,10 @@ export default function History() {
     <div>
       {/* Hero Banner */}
       <section className="relative h-[50vh] min-h-[400px] flex items-center">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1601662528567-526cd06f6582?q=80&w=2015')`
+            backgroundImage: `url(${servicesBg})`,
           }}
         >
           <div className="absolute inset-0 bg-[#1E3A5F]/90" />
@@ -78,7 +79,9 @@ export default function History() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Our History</h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              Our History
+            </h1>
             <p className="text-xl text-gray-300 max-w-2xl">
               Over six decades of dedicated service to the Nigerian nation.
             </p>
@@ -94,14 +97,18 @@ export default function History() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Our Journey</span>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              Our Journey
+            </span>
             <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3 mb-6">
               A Legacy of Service
             </h2>
             <p className="text-gray-600 text-lg leading-relaxed">
-              The Federal Fire Service of Nigeria has evolved from colonial-era fire brigades to become 
-              one of Africa's leading fire protection agencies. Our history is marked by continuous 
-              growth, modernization, and an unwavering commitment to protecting lives and property.
+              The Federal Fire Service of Nigeria has evolved from colonial-era
+              fire brigades to become one of Africa's leading fire protection
+              agencies. Our history is marked by continuous growth,
+              modernization, and an unwavering commitment to protecting lives
+              and property.
             </p>
           </motion.div>
         </div>
@@ -120,7 +127,9 @@ export default function History() {
                 transition={{ delay: idx * 0.1 }}
                 className="text-center"
               >
-                <p className="text-4xl md:text-5xl font-bold text-white mb-2">{milestone.number}</p>
+                <p className="text-4xl md:text-5xl font-bold text-white mb-2">
+                  {milestone.number}
+                </p>
                 <p className="text-white/80">{milestone.label}</p>
               </motion.div>
             ))}
@@ -137,8 +146,12 @@ export default function History() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">Through The Years</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">Historical Timeline</h2>
+            <span className="text-[#C41E3A] font-semibold text-sm uppercase tracking-wider">
+              Through The Years
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1E3A5F] mt-3">
+              Historical Timeline
+            </h2>
           </motion.div>
 
           <div className="relative">
@@ -153,22 +166,28 @@ export default function History() {
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
                 className={`relative flex items-start gap-8 mb-12 ${
-                  idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+                  idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
                 {/* Timeline Dot */}
                 <div className="absolute left-8 md:left-1/2 w-4 h-4 bg-[#C41E3A] rounded-full transform -translate-x-1/2 mt-6 z-10" />
 
                 {/* Content Card */}
-                <div className={`ml-20 md:ml-0 md:w-[45%] ${idx % 2 === 0 ? 'md:pr-12' : 'md:pl-12'}`}>
+                <div
+                  className={`ml-20 md:ml-0 md:w-[45%] ${idx % 2 === 0 ? "md:pr-12" : "md:pl-12"}`}
+                >
                   <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-[#C41E3A]/10 rounded-xl flex items-center justify-center">
                         <event.icon className="w-6 h-6 text-[#C41E3A]" />
                       </div>
-                      <span className="text-2xl font-bold text-[#D4AF37]">{event.year}</span>
+                      <span className="text-2xl font-bold text-[#D4AF37]">
+                        {event.year}
+                      </span>
                     </div>
-                    <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">{event.title}</h3>
+                    <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">
+                      {event.title}
+                    </h3>
                     <p className="text-gray-600">{event.description}</p>
                   </div>
                 </div>
@@ -186,11 +205,14 @@ export default function History() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Looking Forward</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Looking Forward
+            </h2>
             <p className="text-gray-300 text-lg leading-relaxed">
-              As we continue to grow and evolve, the Federal Fire Service remains committed to 
-              embracing modern technologies, expanding our reach to underserved areas, and 
-              training the next generation of firefighters to protect Nigeria for decades to come.
+              As we continue to grow and evolve, the Federal Fire Service
+              remains committed to embracing modern technologies, expanding our
+              reach to underserved areas, and training the next generation of
+              firefighters to protect Nigeria for decades to come.
             </p>
           </motion.div>
         </div>

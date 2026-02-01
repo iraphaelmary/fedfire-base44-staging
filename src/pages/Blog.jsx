@@ -8,6 +8,7 @@ import { Calendar, User, Tag, Search, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
+import servicesBg from "../../src/assets/services-bg.jpg";
 
 const categories = [
   { value: 'all', label: 'All Posts' },
@@ -50,10 +51,10 @@ export default function Blog() {
     <div>
       {/* Hero Section */}
       <section className="relative h-[40vh] min-h-[350px] flex items-center">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1504711434969-e33886168f5c?q=80&w=2070')`
+            backgroundImage: `url(${servicesBg})`,
           }}
         >
           <div className="absolute inset-0 bg-[#1E3A5F]/90" />
@@ -63,9 +64,12 @@ export default function Blog() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">News & Blog</h1>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              News & Blog
+            </h1>
             <p className="text-xl text-gray-300 max-w-2xl">
-              Stay updated with the latest news, events, and safety tips from the Federal Fire Service.
+              Stay updated with the latest news, events, and safety tips from
+              the Federal Fire Service.
             </p>
           </motion.div>
         </div>
@@ -83,8 +87,8 @@ export default function Blog() {
                   onClick={() => setSelectedCategory(cat.value)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     selectedCategory === cat.value
-                      ? 'bg-[#C41E3A] text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? "bg-[#C41E3A] text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
                   {cat.label}
@@ -111,21 +115,28 @@ export default function Blog() {
         <div className="max-w-7xl mx-auto px-4">
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {Array(6).fill(0).map((_, idx) => (
-                <div key={idx} className="bg-white rounded-2xl overflow-hidden">
-                  <Skeleton className="h-48 w-full" />
-                  <div className="p-6 space-y-3">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-2/3" />
+              {Array(6)
+                .fill(0)
+                .map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white rounded-2xl overflow-hidden"
+                  >
+                    <Skeleton className="h-48 w-full" />
+                    <div className="p-6 space-y-3">
+                      <Skeleton className="h-4 w-24" />
+                      <Skeleton className="h-6 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-2/3" />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           ) : filteredPosts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">No posts found matching your criteria.</p>
+              <p className="text-gray-500 text-lg">
+                No posts found matching your criteria.
+              </p>
             </div>
           ) : (
             <>
@@ -143,15 +154,20 @@ export default function Blog() {
                     <div className="grid grid-cols-1 lg:grid-cols-2">
                       <div className="h-64 lg:h-auto">
                         <img
-                          src={featuredPost.featured_image || 'https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070'}
+                          src={
+                            featuredPost.featured_image ||
+                            "https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070"
+                          }
                           alt={featuredPost.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="p-8 lg:p-12 flex flex-col justify-center">
                         <div className="flex items-center gap-3 mb-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold capitalize ${categoryColors[featuredPost.category] || 'bg-gray-100 text-gray-800'}`}>
-                            {featuredPost.category?.replace('_', ' ')}
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-semibold capitalize ${categoryColors[featuredPost.category] || "bg-gray-100 text-gray-800"}`}
+                          >
+                            {featuredPost.category?.replace("_", " ")}
                           </span>
                           <span className="bg-[#D4AF37] text-[#1E3A5F] px-3 py-1 rounded-full text-xs font-semibold">
                             Featured
@@ -160,11 +176,16 @@ export default function Blog() {
                         <h2 className="text-2xl lg:text-3xl font-bold text-[#1E3A5F] group-hover:text-[#C41E3A] transition-colors mb-4">
                           {featuredPost.title}
                         </h2>
-                        <p className="text-gray-600 mb-6 line-clamp-3">{featuredPost.excerpt}</p>
+                        <p className="text-gray-600 mb-6 line-clamp-3">
+                          {featuredPost.excerpt}
+                        </p>
                         <div className="flex items-center gap-4 text-sm text-gray-500">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
-                            {format(new Date(featuredPost.created_date), 'MMM d, yyyy')}
+                            {format(
+                              new Date(featuredPost.created_date),
+                              "MMM d, yyyy",
+                            )}
                           </span>
                           {featuredPost.author && (
                             <span className="flex items-center gap-1">
@@ -195,23 +216,30 @@ export default function Blog() {
                     >
                       <div className="h-48 overflow-hidden">
                         <img
-                          src={post.featured_image || 'https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070'}
+                          src={
+                            post.featured_image ||
+                            "https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070"
+                          }
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
                       <div className="p-6">
-                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize mb-3 ${categoryColors[post.category] || 'bg-gray-100 text-gray-800'}`}>
-                          {post.category?.replace('_', ' ')}
+                        <span
+                          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold capitalize mb-3 ${categoryColors[post.category] || "bg-gray-100 text-gray-800"}`}
+                        >
+                          {post.category?.replace("_", " ")}
                         </span>
                         <h3 className="text-lg font-bold text-[#1E3A5F] group-hover:text-[#C41E3A] transition-colors mb-2 line-clamp-2">
                           {post.title}
                         </h3>
-                        <p className="text-gray-600 text-sm line-clamp-2 mb-4">{post.excerpt}</p>
+                        <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                          {post.excerpt}
+                        </p>
                         <div className="flex items-center justify-between text-sm text-gray-500">
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
-                            {format(new Date(post.created_date), 'MMM d, yyyy')}
+                            {format(new Date(post.created_date), "MMM d, yyyy")}
                           </span>
                           <span className="text-[#C41E3A] font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
                             Read More <ArrowRight className="w-4 h-4" />
