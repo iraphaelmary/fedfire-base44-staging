@@ -7,12 +7,8 @@ import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { isAdmin, isSuperAdmin } from "@/components/utils/security";
 import { useAuth } from "@/context/AuthContext";
-import logo from "../../../src/assets/ffslogo.jpg";
-<<<<<<< HEAD
-
-=======
+import logo from "@/assets/ffslogo.jpg";
 import { LogoutConfirmation } from "./LogoutConfirmation";
->>>>>>> b33fde8 (frontend - ui update)
 
 const navLinks = [
   { name: 'Home', page: 'Home' },
@@ -91,20 +87,11 @@ export default function Navbar() {
               to={createPageUrl("Home")}
               className="flex items-center gap-3"
             >
-<<<<<<< HEAD
-              <div className="w-12 h-12 bg-gradient-to-br from-[#C41E3A] to-[#8B0000] rounded-full flex items-center justify-center">
-                {/* <Flame className="w-7 h-7 text-white" /> */}
-                <img
-                  src={logo}
-                  alt="logo"
-                  className="w-12 h-12 text-white rounder-full"
-=======
               <div className="w-12 h-12 bg-transparent flex items-center justify-center">
                 <img
                   src={logo}
                   alt="logo"
                   className="w-12 h-12 rounded-full"
->>>>>>> b33fde8 (frontend - ui update)
                 />
               </div>
               <div className="hidden sm:block">
