@@ -1,9 +1,20 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+//@ts-nocheck
+import React from "react";
+import { motion } from "framer-motion";
 import {
-  Flame, Shield, GraduationCap, Users, FileText, Briefcase,
-  Building2, Truck, Search, Globe, Stethoscope, Wrench
-} from 'lucide-react';
+  Flame,
+  Shield,
+  GraduationCap,
+  Users,
+  FileText,
+  Briefcase,
+  Building2,
+  Truck,
+  Search,
+  Globe,
+  Stethoscope,
+  Wrench,
+} from "lucide-react";
 import servicesBg from "../../src/assets/services-bg.jpg";
 
 const departments = [
