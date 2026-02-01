@@ -35,3 +35,5 @@ convex-local-backend
 convex_local_storage
 convex_local_backend.sqlite3
 .convex
+.git
+_backup_assets

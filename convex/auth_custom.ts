@@ -33,16 +33,21 @@ export const signUp = action({
     // 3. Create user (unverified)
     // Note: We are storing password in plain text for this fix because we don't have bcrypt setup.
     // IN PRODUCTION: USE BCRYPT OR ARGON2
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
     const userId = await ctx.runMutation(api.auth_custom.createUserInternal, {
         email: args.email,
         passwordHash: args.password, // TODO: Hash this!
         name: args.name,
-        verificationCode: Math.floor(100000 + Math.random() * 900000).toString(),
+        verificationCode,
         role: "user", // Default, might be upgraded to admin later
     });
 
     // 4. Send verification email (mock)
     console.log(`Sending verification code to ${args.email}: ${userId}`); // Ideally logging code here but we need to fetch it or return it?
+    // 4. Send verification email (mock)
+    const siteUrl = process.env.SITE_URL || "http://localhost:5173";
+    console.log(`Sending verification code to ${args.email}: ${userId}`); 
+    console.log(`Verify URL: ${siteUrl}/signup?verify=true&email=${encodeURIComponent(args.email)}&code=${verificationCode}`);
     // actually createUserInternal returns user ID. 
 
     return { success: true };
@@ -162,7 +167,9 @@ export const resendCode = action({
         const newCode = Math.floor(100000 + Math.random() * 900000).toString();
         await ctx.runMutation(api.auth_custom.updateVerificationCode, { userId: user._id, code: newCode });
         
+        const siteUrl = process.env.SITE_URL || "http://localhost:5173";
         console.log(`Resent code to ${args.email}: ${newCode}`);
+        console.log(`Verify URL: ${siteUrl}/signup?verify=true&email=${encodeURIComponent(args.email)}&code=${newCode}`);
     }
 });
 
@@ -183,7 +190,9 @@ export const sendPasswordResetEmail = action({
         const code = Math.floor(100000 + Math.random() * 900000).toString(); // or token
         // Use resetCode for OTP flow
         await ctx.runMutation(api.auth_custom.setResetCode, { userId: user._id, code });
+        const siteUrl = process.env.SITE_URL || "http://localhost:5173";
         console.log(`Reset code for ${args.email}: ${code}`);
+        console.log(`Reset URL: ${siteUrl}/reset-password?code=${code}&email=${encodeURIComponent(args.email)}`);
     }
 });
 

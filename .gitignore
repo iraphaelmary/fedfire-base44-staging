@@ -17,7 +17,7 @@ dist-ssr
 .env*.local
 
 # Convex
-convex/_generated/
+# convex/_generated/
 convex-local-backend
 convex-backend.zip
 convex_local_backend.sqlite3

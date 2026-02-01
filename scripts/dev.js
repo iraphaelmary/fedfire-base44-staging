@@ -50,7 +50,7 @@ function cleanConvexConfig() {
   // Resend API Key for email verification
   const resendApiKey = 're_GVxNMych_25S2rFfBqjr4dhT9D9fLvEjn';
 
-  const envContent = `JWT_PRIVATE_KEY="${jwtKey.split('\n').join('\\n')}"\nAUTH_SECRET="${authSecret}"\n\nVITE_CONVEX_URL=http://127.0.0.1:3210\n\nRESEND_API_KEY=${resendApiKey}\n`;
+  const envContent = `JWT_PRIVATE_KEY="${jwtKey.split('\n').join('\\n')}"\nAUTH_SECRET="${authSecret}"\n\nVITE_CONVEX_URL=http://127.0.0.1:3210\n\nRESEND_API_KEY=${resendApiKey}\nSITE_URL=http://localhost:5173\n`;
   writeFileSync(join(projectRoot, '.env.local'), envContent);
   console.log('🔑 Generated .env.local with JWT_PRIVATE_KEY, AUTH_SECRET, and RESEND_API_KEY');
   return { jwtKey, authSecret, resendApiKey };
@@ -169,6 +169,13 @@ async function main() {
       // Set RESEND_API_KEY for email verification
       const resendKeyCommand = `npx convex env set RESEND_API_KEY='${resendApiKey}' --url http://127.0.0.1:3210 --admin-key ${ADMIN_KEY}`;
       execSync(resendKeyCommand, {
+        cwd: projectRoot,
+        stdio: 'inherit'
+      });
+
+      // Set SITE_URL
+      const siteUrlCommand = `npx convex env set SITE_URL='http://localhost:5173' --url http://127.0.0.1:3210 --admin-key ${ADMIN_KEY}`;
+      execSync(siteUrlCommand, {
         cwd: projectRoot,
         stdio: 'inherit'
       });
