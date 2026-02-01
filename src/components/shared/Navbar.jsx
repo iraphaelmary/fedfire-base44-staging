@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/lib/utils';
-import { Menu, X, ChevronDown, Phone, Flame, LogOut, Settings, LogIn, UserPlus } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, LogOut, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import { useAuthActions } from "@convex-dev/auth/react";
-// import { useQuery, Authenticated } from "convex/react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { isAdmin, isSuperAdmin } from "@/components/utils/security";
 import { useAuth } from "@/context/AuthContext";
 import logo from "../../../src/assets/ffslogo.jpg";
+<<<<<<< HEAD
 
+=======
+import { LogoutConfirmation } from "./LogoutConfirmation";
+>>>>>>> b33fde8 (frontend - ui update)
 
 const navLinks = [
   { name: 'Home', page: 'Home' },
@@ -25,15 +27,11 @@ const navLinks = [
   { name: 'Departments', page: 'Departments' },
   { name: 'News & Blog', page: 'Blog' },
   { name: 'Contact', page: 'Contact' },
-
 ];
-
-import { LogoutConfirmation } from "./LogoutConfirmation";
 
 export default function Navbar() {
   const { logout, isAuthenticated, token } = useAuth();
   const currentUser = useQuery(api.users.viewer, { token: token ?? undefined });
-  const hasAdminUser = useQuery(api.users.hasAdmin, {});
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -47,7 +45,7 @@ export default function Navbar() {
 
   const handleLogoutClick = () => {
     setShowLogoutConfirm(true);
-    setIsOpen(false); // Close mobile menu if open
+    setIsOpen(false);
   };
 
   const confirmLogout = () => {
@@ -82,8 +80,10 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-md'
-        }`}>
+      <nav
+        className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? "bg-white shadow-lg" : "bg-white/95 backdrop-blur-md"
+          }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
@@ -91,17 +91,29 @@ export default function Navbar() {
               to={createPageUrl("Home")}
               className="flex items-center gap-3"
             >
+<<<<<<< HEAD
               <div className="w-12 h-12 bg-gradient-to-br from-[#C41E3A] to-[#8B0000] rounded-full flex items-center justify-center">
                 {/* <Flame className="w-7 h-7 text-white" /> */}
                 <img
                   src={logo}
                   alt="logo"
                   className="w-12 h-12 text-white rounder-full"
+=======
+              <div className="w-12 h-12 bg-transparent flex items-center justify-center">
+                <img
+                  src={logo}
+                  alt="logo"
+                  className="w-12 h-12 rounded-full"
+>>>>>>> b33fde8 (frontend - ui update)
                 />
               </div>
-              <div className="block">
-                <h1 className="font-bold text-[#1E3A5F] text-xl leading-tight tracking-tight">Federal Fire Service</h1>
-                <p className="text-[10px] uppercase tracking-widest text-[#C41E3A] font-bold">Federal Republic of Nigeria</p>
+              <div className="hidden sm:block">
+                <h1 className="font-bold text-[#1E3A5F] text-lg leading-tight">
+                  Federal Fire Service
+                </h1>
+                <p className="text-xs text-gray-500">
+                  Federal Republic of Nigeria
+                </p>
               </div>
             </Link>
 
@@ -111,7 +123,9 @@ export default function Navbar() {
                 <div
                   key={link.name}
                   className="relative group"
-                  onMouseEnter={() => link.subLinks && setActiveDropdown(link.name)}
+                  onMouseEnter={() =>
+                    link.subLinks && setActiveDropdown(link.name)
+                  }
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <Link
@@ -173,16 +187,13 @@ export default function Navbar() {
                   </button>
                 </div>
               )}
-              {/* Login removed - manual navigation to /login required */}
-
-
 
               <a
-                href="tel:112"
+                href="tel:08032003557"
                 className="hidden xl:flex items-center gap-2 bg-[#C41E3A] text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-sm shadow-red-900/10 hover:bg-[#A01830] transition-all hover:scale-105"
               >
                 <Phone className="w-4 h-4" />
-                Emergency: 112
+                Emergency: 08032003557
               </a>
             </div>
 
@@ -201,27 +212,24 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu - OUTSIDE nav for proper fixed positioning */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black z-40 xl:hidden"
+              className="fixed inset-0 bg-black z-40 lg:hidden"
               onClick={() => setIsOpen(false)}
             />
-            {/* Slide-in Menu from Right */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 h-full w-[80%] bg-white shadow-xl z-50 xl:hidden overflow-y-auto"
+              className="fixed top-0 right-0 h-full w-[80%] bg-white shadow-xl z-50 lg:hidden overflow-y-auto"
             >
-              {/* Close button */}
               <div className="flex justify-end p-4">
                 <button onClick={() => setIsOpen(false)} className="p-2 text-[#1E3A5F]">
                   <X className="w-6 h-6" />
@@ -229,7 +237,7 @@ export default function Navbar() {
               </div>
               <div className="px-4 py-4 space-y-2">
                 {navLinks.map((link) => (
-                  <div key={link.name} className={['Home', 'About Us', 'Contact'].includes(link.name) ? 'lg:hidden' : ''}>
+                  <div key={link.name}>
                     <Link
                       to={createPageUrl(link.page)}
                       onClick={() => setIsOpen(false)}
@@ -253,13 +261,14 @@ export default function Navbar() {
                     )}
                   </div>
                 ))}
+
                 {isAdmin(currentUser) && (
                   <>
                     {isSuperAdmin(currentUser) && (
                       <Link
                         to="/admin"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center gap-2 px-4 py-3 text-[#1E3A5F] hover:bg-gray-50 rounded-lg font-medium"
+                        className="flex items-center gap-2 px-4 py-3 text-[#1E3A5F] hover:bg-gray-50 rounded-lg font-medium border-t mt-2"
                       >
                         <Settings className="w-5 h-5" />
                         Admin Dashboard
@@ -275,11 +284,10 @@ export default function Navbar() {
                     </button>
                   </>
                 )}
-                {/* Login removed - manual navigation to /login required */}
 
                 <a
-                  href="tel:112"
-                  className="md:hidden flex items-center justify-center gap-2 bg-[#C41E3A] text-white px-5 py-3 rounded-lg font-semibold mt-4"
+                  href="tel:08032003557"
+                  className="flex items-center justify-center gap-2 bg-[#C41E3A] text-white px-5 py-3 rounded-lg font-semibold mt-4 shadow-md"
                 >
                   <Phone className="w-4 h-4" />
                   Emergency: 08032003557

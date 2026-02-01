@@ -1,15 +1,6 @@
-// @ts-nocheck
-import React from "react";
-import { motion } from "framer-motion";
-import {
-  Award,
-  GraduationCap,
-  Briefcase,
-  Calendar,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Award, GraduationCap, Briefcase, Calendar, Mail, Phone, MapPin } from 'lucide-react';
 import servicesBg from "../../src/assets/services-bg.jpg";
 import cgSign from "../../src/assets/cg-sign.jpg";
 
@@ -205,9 +196,8 @@ export default function ControllerGeneral() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1 }}
-                className={`relative flex items-center mb-8 ${
-                  idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                }`}
+                className={`relative flex items-center mb-8 ${idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
+                  }`}
               >
                 <div className="absolute left-4 md:left-1/2 w-3 h-3 bg-[#C41E3A] rounded-full transform -translate-x-1/2 z-10" />
 

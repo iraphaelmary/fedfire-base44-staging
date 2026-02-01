@@ -83,8 +83,8 @@ export default function Blog() {
                   key={cat.value}
                   onClick={() => setSelectedCategory(cat.value)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedCategory === cat.value
-                    ? 'bg-[#C41E3A] text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? "bg-[#C41E3A] text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                     }`}
                 >
                   {cat.label}
