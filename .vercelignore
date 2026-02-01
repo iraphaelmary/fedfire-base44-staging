@@ -1,28 +1,15 @@
-# Vercel
-.vercel
-
 # Dependencies
 node_modules
 
-# Build outputs
+# Build outputs (Vercel builds these itself)
 dist
 build
 .next
 
-# Environment files
+# Development files
 .env
 .env.local
 .env*.local
-
-# Convex local storage
-convex_local_storage
-
-# Convex backend (deployed separately)
-convex
-
-# Convex local development backend
-convex-local-backend
-convex_local_backend.sqlite3
 
 # Editor directories
 .idea
@@ -42,3 +29,9 @@ yarn-error.log*
 
 # Test coverage
 coverage
+
+# Convex local development (large files)
+convex-local-backend
+convex_local_storage
+convex_local_backend.sqlite3
+.convex

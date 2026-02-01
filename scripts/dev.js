@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import { spawn, execSync } from 'child_process';
+import { spawn, execSync, spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { existsSync, unlinkSync, chmodSync, createWriteStream } from 'fs';
+import { existsSync, unlinkSync, chmodSync, createWriteStream, writeFileSync } from 'fs';
+import { randomBytes, generateKeyPairSync } from 'crypto';
 import https from 'https';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,7 +25,7 @@ function cleanConvexConfig() {
     join(projectRoot, '.env.local'),
     join(projectRoot, 'convex.json')
   ];
-  
+
   filesToClean.forEach(file => {
     if (existsSync(file)) {
       try {
@@ -35,6 +36,24 @@ function cleanConvexConfig() {
       }
     }
   });
+
+  // Generate and write .env.local with JWT_PRIVATE_KEY (PKCS#8 PEM) and AUTH_SECRET
+  const { privateKey } = generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+  });
+  const jwtKey = privateKey;
+
+  // Generate a random 32-byte secret for AUTH_SECRET
+  const authSecret = randomBytes(32).toString('hex');
+
+  // Resend API Key for email verification
+  const resendApiKey = 're_GVxNMych_25S2rFfBqjr4dhT9D9fLvEjn';
+
+  const envContent = `JWT_PRIVATE_KEY="${jwtKey.split('\n').join('\\n')}"\nAUTH_SECRET="${authSecret}"\n\nVITE_CONVEX_URL=http://127.0.0.1:3210\n\nRESEND_API_KEY=${resendApiKey}\n`;
+  writeFileSync(join(projectRoot, '.env.local'), envContent);
+  console.log('🔑 Generated .env.local with JWT_PRIVATE_KEY, AUTH_SECRET, and RESEND_API_KEY');
+  return { jwtKey, authSecret, resendApiKey };
 }
 
 function downloadFile(url, dest) {
@@ -60,7 +79,7 @@ function downloadFile(url, dest) {
 
 async function prepareBackend() {
   const binaryPath = join(projectRoot, BACKEND_BINARY);
-  
+
   if (existsSync(binaryPath)) {
     console.log('✅ Local backend binary found.');
     return;
@@ -68,7 +87,7 @@ async function prepareBackend() {
 
   console.log('⬇️  Downloading Convex local backend binary...');
   const zipPath = join(projectRoot, BACKEND_ZIP);
-  
+
   try {
     await downloadFile(BACKEND_URL, zipPath);
     console.log('📦 Unzipping binary...');
@@ -83,22 +102,34 @@ async function prepareBackend() {
 
 async function main() {
   console.log('🚀 Starting FedFire development environment (Manual Mode)...\n');
-  
-  cleanConvexConfig();
-  
+
+  const { jwtKey, authSecret, resendApiKey } = cleanConvexConfig();
+
   try {
     // 1. Prepare Backend Binary
     await prepareBackend();
 
     // 2. Start Backend Process
-    console.log('🔥 Starting Convex backend process...');
-    const backendProcess = spawn(`./${BACKEND_BINARY}`, [], {
+    console.log('🔥 Starting Convex backend process (via Docker)...');
+
+    // Use Docker to run the binary to avoid GLIBC issues on older hosts
+    // We need to install ca-certificates AND set SSL env vars for bundled OpenSSL
+    // Add --add-host for host.docker.internal to work on Linux
+    const backendProcess = spawn('docker', [
+      'run', '--rm',
+      '-v', `${projectRoot}:/app`,
+      '-w', '/app',
+      '-p', '3210:3210',
+      '-p', '3211:3211',
+      '--add-host=host.docker.internal:host-gateway',
+      '-e', 'SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt',
+      '-e', 'SSL_CERT_DIR=/etc/ssl/certs',
+      'ubuntu:22.04',
+      'bash', '-c', `apt-get update -qq && apt-get install -y -qq ca-certificates > /dev/null 2>&1 && update-ca-certificates > /dev/null 2>&1 && ./${BACKEND_BINARY}`
+    ], {
       cwd: projectRoot,
-      stdio: 'pipe', // Pipe so we can suppress output but keep it alive? Or inherit to see logs?
-      // Let's inherit stderr so we see errors, ignore stdout to reduce noise? 
-      // User says "Keep this running in one terminal".
-      // We will run it in background of this script.
-      stdio: ['ignore', 'ignore', 'inherit'] 
+      // Inherit stderr for errors, ignore stdout/stdin
+      stdio: ['ignore', 'inherit', 'inherit']
     });
 
     backendProcess.on('error', (err) => {
@@ -106,24 +137,68 @@ async function main() {
       process.exit(1);
     });
 
-    // Clean up backend on exit
+    // Clean up all processes on exit
+    let emailServerProcess = null; // Will be set later
     process.on('SIGINT', () => {
-      console.log('\n🛑 Stopping backend...');
+      console.log('\n🛑 Stopping all servers...');
       backendProcess.kill();
+      if (emailServerProcess) emailServerProcess.kill();
       process.exit(0);
     });
-    
+
     // Give backend a moment to start
     await new Promise(r => setTimeout(r, 2000));
 
-    // 3. Start Convex CLI + Vite
+    // 2.5 Set JWT_PRIVATE_KEY and AUTH_SECRET in Convex Backend
+    console.log('🔐 Setting AUTH environment variables in backend...');
+    try {
+      // Use positional argument with NAME=VALUE syntax which sometimes helps CLIs
+      // Or use single quotes and escape internal single quotes if any (PEM has none)
+      const jwtCommand = `npx convex env set JWT_PRIVATE_KEY='${jwtKey}' --url http://127.0.0.1:3210 --admin-key ${ADMIN_KEY}`;
+      execSync(jwtCommand, {
+        cwd: projectRoot,
+        stdio: 'inherit'
+      });
+
+      const authSecretCommand = `npx convex env set AUTH_SECRET='${authSecret}' --url http://127.0.0.1:3210 --admin-key ${ADMIN_KEY}`;
+      execSync(authSecretCommand, {
+        cwd: projectRoot,
+        stdio: 'inherit'
+      });
+
+      // Set RESEND_API_KEY for email verification
+      const resendKeyCommand = `npx convex env set RESEND_API_KEY='${resendApiKey}' --url http://127.0.0.1:3210 --admin-key ${ADMIN_KEY}`;
+      execSync(resendKeyCommand, {
+        cwd: projectRoot,
+        stdio: 'inherit'
+      });
+    } catch (err) {
+      console.warn('⚠️  Could not set AUTH environment variables in backend. You may need to set them manually.');
+    }
+
+    // 3. Start Email Proxy Server (bypasses Convex SSL issues)
+    console.log('📬 Starting email proxy server...');
+    emailServerProcess = spawn('node', ['--dns-result-order=ipv4first', 'scripts/email-server.js'], {
+      cwd: projectRoot,
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        RESEND_API_KEY: resendApiKey
+      }
+    });
+
+    emailServerProcess.on('error', (err) => {
+      console.error('❌ Failed to start email server:', err);
+    });
+
+    // 4. Start Convex CLI + Vite
     console.log('✨ Starting connection and Vite dev server...');
     const connectCmd = 'npx';
     const connectArgs = [
       'convex', 'dev',
       '--url', 'http://127.0.0.1:3210',
       '--admin-key', ADMIN_KEY,
-      '--run-sh', 'npm run dev:vite -- --host'
+      '--run-sh', 'yarn run dev:vite -- --host'
     ];
 
     const cliProcess = spawn(connectCmd, connectArgs, {
@@ -134,7 +209,7 @@ async function main() {
         CI: '1' // Ensure non-interactive
       }
     });
-    
+
     cliProcess.on('close', (code) => {
       console.log('\n👋 Development servers stopped');
       backendProcess.kill();

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { createPageUrl } from '@/lib/utils';
+import { useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 import { motion } from 'framer-motion';
 import { Calendar, User, Tag, ArrowLeft, Share2, Facebook, Twitter, Linkedin, MessageCircle, Link as LinkIcon } from 'lucide-react';
 import { format } from 'date-fns';
@@ -24,27 +24,12 @@ export default function BlogPost() {
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get('id');
 
-  const { data: post, isLoading } = useQuery({
-    queryKey: ['blog-post', postId],
-    queryFn: async () => {
-      const posts = await base44.entities.BlogPost.filter({ id: postId });
-      return posts[0];
-    },
-    enabled: !!postId,
-  });
+  const post = useQuery(api.blogPosts.get, postId ? { id: postId } : "skip");
+  const isLoading = post === undefined;
 
-  const { data: relatedPosts } = useQuery({
-    queryKey: ['related-posts', post?.category],
-    queryFn: () => base44.entities.BlogPost.filter(
-      { category: post.category, published: true },
-      '-created_date',
-      4
-    ),
-    enabled: !!post?.category,
-    initialData: [],
-  });
+  const relatedPosts = useQuery(api.blogPosts.list, post ? { category: post.category, published: true } : "skip") || [];
 
-  const filteredRelated = relatedPosts.filter(p => p.id !== postId).slice(0, 3);
+  const filteredRelated = relatedPosts.filter(p => p._id !== postId).slice(0, 3);
 
   const handleCopyLink = () => {
     const url = window.location.href;
@@ -94,7 +79,7 @@ export default function BlogPost() {
     <div>
       {/* Hero Section */}
       <section className="relative h-[50vh] min-h-[400px] flex items-end">
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url('${post.featured_image || 'https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?q=80&w=2070'}')`
@@ -123,12 +108,6 @@ export default function BlogPost() {
                 <Calendar className="w-4 h-4" />
                 {format(new Date(post.created_date), 'MMMM d, yyyy')}
               </span>
-              {post.author && (
-                <span className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  {post.author}
-                </span>
-              )}
             </div>
           </motion.div>
         </div>
@@ -142,8 +121,8 @@ export default function BlogPost() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <SecureContent 
-              content={post.content} 
+            <SecureContent
+              content={post.content}
               type="markdown"
               className="prose prose-lg max-w-none prose-headings:text-[#1E3A5F] prose-a:text-[#C41E3A]"
             />
@@ -238,8 +217,8 @@ export default function BlogPost() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {filteredRelated.map((relPost) => (
                 <Link
-                  key={relPost.id}
-                  to={createPageUrl(`BlogPost?id=${relPost.id}`)}
+                  key={relPost._id}
+                  to={createPageUrl(`BlogPost?id=${relPost._id}`)}
                   className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all"
                 >
                   <div className="h-40 overflow-hidden">

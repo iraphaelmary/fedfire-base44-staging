@@ -1,5 +1,5 @@
 import React from 'react';
-import { base44 } from '@/api/base44Client';
+import SEO from '@/components/SEO';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import HeroSection from '@/components/home/HeroSection';
@@ -14,6 +14,10 @@ export default function Home() {
 
   return (
     <div>
+      <SEO
+        title="Home"
+        description="Welcome to FedFire - Leading Fire Safety & Prevention Resources"
+      />
       <HeroSection />
       <ServicesPreview />
       <AboutPreview />

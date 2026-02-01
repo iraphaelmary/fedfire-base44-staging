@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -42,36 +42,12 @@ export default function CategoryManager({ onClose }) {
   });
   const [errors, setErrors] = useState({});
 
-  const queryClient = useQueryClient();
+  const categories = useQuery(api.categories.list, {}) || [];
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => base44.entities.Category.list(),
-  });
+  const createCategory = useMutation(api.categories.create);
+  const updateCategory = useMutation(api.categories.update);
+  const removeCategory = useMutation(api.categories.remove);
 
-  const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.Category.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      resetForm();
-    },
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Category.update(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      resetForm();
-    },
-  });
-
-  const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.Category.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      setDeleteCategory(null);
-    },
-  });
 
   const resetForm = () => {
     setFormData({ name: '', slug: '', description: '', color: 'bg-blue-100 text-blue-800' });
@@ -86,26 +62,22 @@ export default function CategoryManager({ onClose }) {
     setShowForm(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({});
-
-    // Security validation
-    const validation = validateCategoryForm(formData);
-    if (!validation.isValid) {
-      setErrors(validation.errors);
-      return;
-    }
-
     const sanitizedData = sanitizeFormData(formData);
     if (!sanitizedData.slug) {
       sanitizedData.slug = sanitizedData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
 
-    if (editingCategory) {
-      updateMutation.mutate({ id: editingCategory.id, data: sanitizedData });
-    } else {
-      createMutation.mutate(sanitizedData);
+    try {
+      if (editingCategory) {
+        await updateCategory({ id: editingCategory._id, ...sanitizedData });
+      } else {
+        await createCategory(sanitizedData);
+      }
+      resetForm();
+    } catch (error) {
+      console.error("Failed to save category:", error);
     }
   };
 
@@ -141,7 +113,7 @@ export default function CategoryManager({ onClose }) {
               <h3 className="font-semibold text-[#1E3A5F] mb-4">
                 {editingCategory ? 'Edit Category' : 'New Category'}
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name *</Label>
@@ -189,9 +161,8 @@ export default function CategoryManager({ onClose }) {
                       key={color}
                       type="button"
                       onClick={() => setFormData({ ...formData, color })}
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${color} ${
-                        formData.color === color ? 'ring-2 ring-offset-2 ring-[#C41E3A]' : ''
-                      }`}
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${color} ${formData.color === color ? 'ring-2 ring-offset-2 ring-[#C41E3A]' : ''
+                        }`}
                     >
                       Sample
                     </button>
@@ -213,7 +184,7 @@ export default function CategoryManager({ onClose }) {
           <div className="space-y-2">
             {categories.map((category) => (
               <div
-                key={category.id}
+                key={category._id}
                 className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
               >
                 <div className="flex items-center gap-3">
@@ -262,7 +233,14 @@ export default function CategoryManager({ onClose }) {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => deleteMutation.mutate(deleteCategory.id)}
+                onClick={async () => {
+                  try {
+                    await removeCategory({ id: deleteCategory._id });
+                    setDeleteCategory(null);
+                  } catch (error) {
+                    console.error("Failed to delete category:", error);
+                  }
+                }}
                 className="bg-red-600 hover:bg-red-700"
               >
                 Delete

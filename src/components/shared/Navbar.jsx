@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
-import { Menu, X, ChevronDown, Phone, Flame } from 'lucide-react';
+import { createPageUrl } from '@/lib/utils';
+import { Menu, X, ChevronDown, Phone, Flame, LogOut, Settings, LogIn, UserPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+// import { useAuthActions } from "@convex-dev/auth/react";
+// import { useQuery, Authenticated } from "convex/react";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { isAdmin, isSuperAdmin } from "@/components/utils/security";
+import { useAuth } from "@/context/AuthContext";
+
 
 const navLinks = [
   { name: 'Home', page: 'Home' },
-  { name: 'About Us', page: 'About', subLinks: [
-    { name: 'Our History', page: 'History' },
-    { name: 'Controller General', page: 'ControllerGeneral' },
-    { name: 'Leadership', page: 'Leadership' },
-  ]},
+  {
+    name: 'About Us', page: 'About', subLinks: [
+      { name: 'Our History', page: 'History' },
+      { name: 'Controller General', page: 'ControllerGeneral' },
+      { name: 'Leadership', page: 'Leadership' },
+    ]
+  },
   { name: 'Services', page: 'Services' },
   { name: 'Departments', page: 'Departments' },
   { name: 'News & Blog', page: 'Blog' },
   { name: 'Contact', page: 'Contact' },
-  { name: 'Admin', page: 'AdminDashboard' },
+
 ];
 
+import { LogoutConfirmation } from "./LogoutConfirmation";
+
 export default function Navbar() {
+  const { logout, isAuthenticated, token } = useAuth();
+  const currentUser = useQuery(api.users.viewer, { token: token ?? undefined });
+  const hasAdminUser = useQuery(api.users.hasAdmin, {});
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -29,8 +44,24 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+    setIsOpen(false); // Close mobile menu if open
+  };
+
+  const confirmLogout = () => {
+    logout();
+    setShowLogoutConfirm(false);
+  };
+
   return (
-    <>
+    <div className="overflow-x-hidden">
+      <LogoutConfirmation
+        isOpen={showLogoutConfirm}
+        onClose={() => setShowLogoutConfirm(false)}
+        onConfirm={confirmLogout}
+      />
+
       {/* Top Bar */}
       <div className="bg-[#1E3A5F] text-white py-2 px-4 text-sm hidden md:block">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -45,9 +76,8 @@ export default function Navbar() {
       </div>
 
       {/* Main Navbar */}
-      <nav className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-md'
-      }`}>
+      <nav className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-md'
+        }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Logo */}
@@ -55,29 +85,32 @@ export default function Navbar() {
               <div className="w-12 h-12 bg-gradient-to-br from-[#C41E3A] to-[#8B0000] rounded-full flex items-center justify-center">
                 <Flame className="w-7 h-7 text-white" />
               </div>
-              <div className="hidden sm:block">
-                <h1 className="font-bold text-[#1E3A5F] text-lg leading-tight">Federal Fire Service</h1>
-                <p className="text-xs text-gray-500">Federal Republic of Nigeria</p>
+              <div className="block">
+                <h1 className="font-bold text-[#1E3A5F] text-xl leading-tight tracking-tight">Federal Fire Service</h1>
+                <p className="text-[10px] uppercase tracking-widest text-[#C41E3A] font-bold">Federal Republic of Nigeria</p>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => (
-                <div 
+                <div
                   key={link.name}
-                  className="relative"
+                  className="relative group"
                   onMouseEnter={() => link.subLinks && setActiveDropdown(link.name)}
                   onMouseLeave={() => setActiveDropdown(null)}
                 >
                   <Link
                     to={createPageUrl(link.page)}
-                    className="px-4 py-2 text-[#1E3A5F] hover:text-[#C41E3A] font-medium transition-colors flex items-center gap-1"
+                    className="px-4 py-2 text-[#1E3A5F] hover:text-[#C41E3A] font-semibold text-sm transition-all flex items-center gap-1 relative overflow-hidden"
                   >
-                    {link.name}
-                    {link.subLinks && <ChevronDown className="w-4 h-4" />}
+                    <span>{link.name}</span>
+                    {link.subLinks && <ChevronDown className="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-300" />}
+
+                    {/* Hover indicator bar */}
+                    <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-[#C41E3A] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
                   </Link>
-                  
+
                   {link.subLinks && (
                     <AnimatePresence>
                       {activeDropdown === link.name && (
@@ -104,14 +137,40 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Emergency Button */}
-            <a
-              href="tel:112"
-              className="hidden md:flex items-center gap-2 bg-[#C41E3A] text-white px-5 py-2.5 rounded-full font-semibold hover:bg-[#A01830] transition-colors"
-            >
-              <Phone className="w-4 h-4" />
-              Emergency: 112
-            </a>
+            {/* Actions */}
+            <div className="hidden lg:flex items-center gap-4">
+              {isAdmin(currentUser) && (
+                <div className="flex items-center gap-6 bg-gray-50 px-4 py-2 rounded-full border border-gray-100">
+                  {isSuperAdmin(currentUser) && (
+                    <Link
+                      to="/admin"
+                      className="flex items-center gap-2 text-[#1E3A5F] hover:text-[#C41E3A] text-sm font-semibold transition-colors"
+                    >
+                      <Settings className="w-4 h-4 text-[#C41E3A]" />
+                      <span>Admin</span>
+                    </Link>
+                  )}
+                  <button
+                    onClick={handleLogoutClick}
+                    className="flex items-center gap-2 text-gray-500 hover:text-red-600 text-sm font-semibold transition-colors border-l pl-4 border-gray-200"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              )}
+              {/* Login removed - manual navigation to /login required */}
+
+
+
+              <a
+                href="tel:112"
+                className="hidden xl:flex items-center gap-2 bg-[#C41E3A] text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-sm shadow-red-900/10 hover:bg-[#A01830] transition-all hover:scale-105"
+              >
+                <Phone className="w-4 h-4" />
+                Emergency: 112
+              </a>
+            </div>
 
             {/* Mobile Menu Button */}
             <button
@@ -122,19 +181,37 @@ export default function Navbar() {
             </button>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isOpen && (
+      {/* Mobile Menu - OUTSIDE nav for proper fixed positioning */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Overlay */}
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-white border-t"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black z-40 xl:hidden"
+              onClick={() => setIsOpen(false)}
+            />
+            {/* Slide-in Menu from Right */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="fixed top-0 right-0 h-full w-[80%] bg-white shadow-xl z-50 xl:hidden overflow-y-auto"
             >
+              {/* Close button */}
+              <div className="flex justify-end p-4">
+                <button onClick={() => setIsOpen(false)} className="p-2 text-[#1E3A5F]">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
               <div className="px-4 py-4 space-y-2">
                 {navLinks.map((link) => (
-                  <div key={link.name}>
+                  <div key={link.name} className={['Home', 'About Us', 'Contact'].includes(link.name) ? 'lg:hidden' : ''}>
                     <Link
                       to={createPageUrl(link.page)}
                       onClick={() => setIsOpen(false)}
@@ -158,18 +235,42 @@ export default function Navbar() {
                     )}
                   </div>
                 ))}
+                {isAdmin(currentUser) && (
+                  <>
+                    {isSuperAdmin(currentUser) && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-2 px-4 py-3 text-[#1E3A5F] hover:bg-gray-50 rounded-lg font-medium"
+                      >
+                        <Settings className="w-5 h-5" />
+                        Admin Dashboard
+                      </Link>
+                    )}
+
+                    <button
+                      onClick={handleLogoutClick}
+                      className="w-full flex items-center gap-2 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-lg font-medium"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      Logout
+                    </button>
+                  </>
+                )}
+                {/* Login removed - manual navigation to /login required */}
+
                 <a
                   href="tel:112"
-                  className="flex items-center justify-center gap-2 bg-[#C41E3A] text-white px-5 py-3 rounded-lg font-semibold mt-4"
+                  className="md:hidden flex items-center justify-center gap-2 bg-[#C41E3A] text-white px-5 py-3 rounded-lg font-semibold mt-4"
                 >
                   <Phone className="w-4 h-4" />
                   Emergency: 112
                 </a>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    </>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +15,7 @@ const modules = {
   toolbar: [
     [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
     ['bold', 'italic', 'underline', 'strike'],
-    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
     [{ 'color': [] }, { 'background': [] }],
     ['link', 'image'],
     ['clean']
@@ -35,10 +35,7 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
     published: true,
   });
 
-  const { data: categories = [] } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => base44.entities.Category.list(),
-  });
+  const categories = useQuery(api.categories.list) || [];
 
   useEffect(() => {
     if (post) {
@@ -50,7 +47,7 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Security: Sanitize inputs
     const dataToSave = {
       ...formData,
@@ -58,17 +55,17 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
       excerpt: sanitizeInput(formData.excerpt),
       author: sanitizeInput(formData.author),
     };
-    
+
     if (!dataToSave.slug) {
       dataToSave.slug = dataToSave.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
-    
+
     onSave(dataToSave);
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl w-full max-w-4xl my-8">
+    <div className="fixed inset-0 bg-black/50 flex justify-center z-50 overflow-y-auto p-4 md:p-8">
+      <div className="bg-white rounded-2xl w-full max-w-4xl my-auto">
         <div className="flex items-center justify-between p-6 border-b">
           <div>
             <h2 className="text-2xl font-bold text-[#1E3A5F]">
@@ -146,7 +143,7 @@ export default function BlogPostEditor({ post, onSave, onCancel }) {
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map(cat => (
-                    <SelectItem key={cat.id} value={cat.slug}>{cat.name}</SelectItem>
+                    <SelectItem key={cat._id} value={cat.slug}>{cat.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

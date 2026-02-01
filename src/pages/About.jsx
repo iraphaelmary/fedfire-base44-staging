@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '@/utils';
+import { createPageUrl } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { Target, Eye, Award, Users, Shield, ArrowRight } from 'lucide-react';
 
