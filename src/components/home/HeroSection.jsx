@@ -474,7 +474,7 @@ import { Phone, Shield, ArrowRight } from "lucide-react";
 import CountUp from "react-countup";
 
 import Hero1 from "../../../src/assets/hero-image.jpg";
-import Hero2 from "../../../src/assets/audit.jpg";
+import Hero2 from "../../../src/assets/audit.jpeg";
 import Hero3 from "../../../src/assets/services-bg.jpg";
 import Hero4 from "../../../src/assets/stat4.jpg";
 
